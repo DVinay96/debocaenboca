@@ -19,7 +19,7 @@ const Header = () => {
             <a href="/nosotros">Nosotros</a>{" "}
           </StyledElement>
           <StyledElement>
-            <a href="/products">Mezcales</a>{" "}
+            <a href="/mezcales">Mezcales</a>{" "}
           </StyledElement>
           <StyledElement>
             <a href="/recetas">Recetas</a>{" "}
@@ -49,7 +49,7 @@ const StyledElement = styled.li`
   margin: 2rem;
   display: block;
   :hover {
-    color: #ced3ba;
+    color: #cc9f22;
   }
 `;
 
@@ -90,7 +90,7 @@ const Nav = styled.nav`
   max-width: 1440px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   margin: 0 auto;
   padding: 0 1rem;

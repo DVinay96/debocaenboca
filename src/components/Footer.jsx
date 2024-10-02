@@ -95,7 +95,7 @@ const FooterLink = styled.a`
   margin: 0.5rem 0;
   transition: color 0.3s;
   &:hover {
-    color: #f39c12;
+    color: #cc9f22;
   }
 `;
 
@@ -111,7 +111,7 @@ const SocialMediaIcon = styled.a`
   transition: color 0.3s;
 
   &:hover {
-    color: #f39c12;
+    color: #cc9f22;
   }
 `;
 

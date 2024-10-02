@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import mainLogo from "../assets/images/mainlogo.png";
+import mainImage from '../assets/images/main.jpg'
 
 const Homepage = () => {
   return (
     <PageContainer>
       <UpperContent>
-        <UpperTitle>'El mezcal se toma </UpperTitle>
+        <UpperImage src={mainImage}/>
       </UpperContent>
 
       <LowerSection>
@@ -36,31 +36,55 @@ const PageContainer = styled.div`
 `;
 
 const UpperContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
+display: flex;
+justify-content: space-around;
 `;
 
-const UpperTitle = styled.h1``;
+const UpperImage = styled.img`
+  
+  margin-top: 2rem;
+  width: 75%;
+  height: auto;  /* Maintain the aspect ratio */
+
+  @media (max-width: 768px) {  /* For tablets and mobile */
+    width: 80%;  /* Reduce the width for smaller screens */
+  }
+
+  @media (max-width: 480px) {  /* For smaller mobile screens */
+    width: 100%;  /* Image takes full width on small devices */
+  }
+`;
 
 const LowerSection = styled.section`
-  padding: 0 2rem;
+  display: flex;
+  justify-content: center;
 `;
 
 const MainBox = styled.div`
   font-size: 1.5vw;
-  display: flex;
-  justify-content: space-around;
   flex-wrap: wrap;
-  margin: 10% 20% 5% 20%;
-  padding: 2rem;
   background-color: #00000092;
   border-radius: 5px;
+  width: 75%;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  padding: 0 3rem;
+  @media (max-width: 768px) {  /* For tablets and mobile */
+    width: 80%;  /* Reduce the width for smaller screens */
+  padding: 2%;
+
+  }
+
+  @media (max-width: 480px) {  /* For smaller mobile screens */
+    width: 100%;
+    padding: 2%;  /* Image takes full width on small devices */
+  }
 `;
 
 const BoxText = styled.p`
   color: white;
+  letter-spacing: 2px;
+  word-spacing: 5px;
 `;
 
 export default Homepage;

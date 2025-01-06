@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import logo from "../assets/images/logo.png";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaShoppingCart } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,35 +12,59 @@ const Header = () => {
       <Nav>
         <StyledLogo>
           <a href="/">
-            <img style={{ height: "100%", margin: "1rem" }} src={logo} alt="" />
+            <img style={{ height: "100%", margin: "1rem" }} src={logo} alt="logo" />
           </a>
         </StyledLogo>
         <StyledList isOpen={isOpen}>
           <StyledElement>
-            <a href="/nosotros">Nosotros</a>{" "}
+            <a href="/nosotros">Nosotros</a>
           </StyledElement>
           <StyledElement>
-            <a href="/mezcales">Mezcales</a>{" "}
+            <a href="/mezcales">Mezcales</a>
           </StyledElement>
           <StyledElement>
-            <a href="/recetas">Recetas</a>{" "}
+            <a href="/recetas">Recetas</a>
           </StyledElement>
           <StyledElement>
-            <a href="/tienda">Tienda</a>{" "}
+            <a href="/tienda">Tienda</a>
           </StyledElement>
         </StyledList>
+        <NavLink to="/carrito">
+        <CartButton>
+          <FaShoppingCart />
+        </CartButton>
+        </NavLink>
         <StyledIcon onClick={() => setIsOpen(!isOpen)}>
-          <FaBars></FaBars>
+          <FaBars />
         </StyledIcon>
       </Nav>
     </HeaderContainer>
   );
 };
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const StyledIcon = styled.button`
   font-size: 2rem;
   color: white;
   background-color: black;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
   @media (min-width: 769px) {
     display: none;
   }
@@ -48,8 +73,23 @@ const StyledIcon = styled.button`
 const StyledElement = styled.li`
   margin: 2rem;
   display: block;
-  :hover {
-    color: #cc9f22;
+  list-style: none;
+  transition: color 0.3s, transform 0.3s;
+
+  a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #cc9f22;
+      text-shadow: 0px 0px 10px #cc9f22;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-5px);
   }
 `;
 
@@ -57,6 +97,7 @@ const StyledList = styled.ul`
   font-size: 1.5rem;
   padding: 0.7rem 1rem;
   display: flex;
+  animation: ${fadeIn} 0.5s ease;
 
   @media (max-width: 768px) {
     display: ${({ isOpen }) => (isOpen ? "block" : "none")};
@@ -64,9 +105,11 @@ const StyledList = styled.ul`
     position: absolute;
     top: 180px;
     right: 0;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.9);
     width: 100%;
     text-align: center;
+    border-top: 2px solid #cc9f22;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
   }
 `;
 
@@ -74,12 +117,35 @@ const StyledLogo = styled.div`
   height: 100%;
 `;
 
+const CartButton = styled.button`
+  background-color: #cc9f22;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #a67c14;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
 const HeaderContainer = styled.header`
   background-color: #000000;
   color: #ffffff;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-around;  
+  border-bottom: 2px solid #cc9f22;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
 
   @media (max-width: 768px) {
     position: relative;

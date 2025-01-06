@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
-import drinkImage from '../assets/images/grid6.jpeg'; 
+import styled, { keyframes } from 'styled-components';
+import drinkImage from '../assets/images/grid6.jpeg';
 import recipeVideo from '../assets/videos/videoReceta.mp4';
 
 const Recipes = () => {
@@ -71,25 +71,51 @@ const Recipes = () => {
 
 export default Recipes;
 
+// Animations
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+// Styled Components
 const RecipesPageContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem;
+  animation: ${fadeIn} 1s ease-in-out;
 `;
 
 const VideoContainer = styled.div`
   width: 100%;
   max-width: 800px;
   margin-bottom: 2rem;
+  animation: ${fadeIn} 1.5s ease-in-out;
 `;
 
 const Video = styled.video`
   width: 100%;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 `;
 
 const RecipeCards = styled.div`
@@ -97,7 +123,7 @@ const RecipeCards = styled.div`
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  gap: 1.5rem;
+  gap: 2rem;
   margin-top: 1rem;
 `;
 
@@ -105,11 +131,18 @@ const RecipeCard = styled.div`
   display: flex;
   width: 100%;
   max-width: 800px;
-  background-color: #b1a492; 
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #e8d8c3, #b1a492);
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   flex-direction: column;
+  animation: ${slideIn} 1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -119,6 +152,11 @@ const RecipeCard = styled.div`
 const DrinkImage = styled.img`
   width: 100%;
   height: auto;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 
   @media (min-width: 768px) {
     width: 50%;
@@ -126,20 +164,29 @@ const DrinkImage = styled.img`
 `;
 
 const RecipeInfo = styled.div`
-  padding: 1rem;
+  padding: 1.5rem;
   flex-grow: 1;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0 0 15px 15px;
+
+  @media (min-width: 768px) {
+    border-radius: 0;
+  }
 `;
 
 const DrinkName = styled.h3`
-  font-size: 1.5rem;
-  color: #000000;
-  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const RecipeText = styled.p`
   font-size: 1rem;
-  color: #333;
-  line-height: 1.5;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 1rem;
 `;
 
 const StepsList = styled.ul`
@@ -149,7 +196,7 @@ const StepsList = styled.ul`
 
 const StepItem = styled.li`
   font-size: 1rem;
-  color: #333;
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
 `;

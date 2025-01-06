@@ -8,9 +8,14 @@ import Layout from "./components/Layout";
 import GlobalStyle from "./styles/globalStyles";
 import Products from "./pages/Products";
 import AgeVerifyModal from "./components/AgeVerifyModal";
+import Cart from "./pages/Cart";
 
 function App() {
   const [isVerified, setIsVerified] = useState(false)
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
   useEffect(() => {
     const verified = localStorage.getItem("isVerified");
@@ -19,9 +24,40 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
   const handleVerify = (verified) => {
     setIsVerified(verified);
     localStorage.setItem('isVerified', verified)
+  };
+
+  const addToCart = product => {
+    setCart(prevCart => {
+      const newCart = [...prevCart, product];
+      return newCart;
+    });
+  };
+
+  const removeFromCart = productId => {
+    setCart(prevCart => {
+      const productIndex = prevCart.findIndex(item => item.id === productId);
+      if (productIndex === -1) return prevCart; 
+      
+      const product = prevCart[productIndex];
+      
+      if (product.quantity > 1) {
+        return prevCart.map((item, index) => {
+          if (index === productIndex) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
+        });
+      }
+      
+      return prevCart.filter((_, index) => index !== productIndex);
+    });
   };
 
   return (
@@ -36,7 +72,8 @@ function App() {
         <Route path="/nosotros" element={<About />} />
         <Route path="/mezcales" element={<Products />} />
         <Route path="/recetas" element={<Recipes />} />
-        <Route path="/tienda" element={<Store />} />
+        <Route path="/tienda" element={<Store addToCart={addToCart} removeFromCart={removeFromCart} />} />
+        <Route path="/carrito" element={<Cart cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />
       </Route>
     </Routes>
   </BrowserRouter>

@@ -11,7 +11,7 @@ p{
     height: 100%;
     font-family: "Nanum Myeongjo", serif;
     color: #f5f5f5;
-    background-color: rgba(92,14,14);
+    background-color: rgba(242, 240, 233, 0.8);
     }
 
 

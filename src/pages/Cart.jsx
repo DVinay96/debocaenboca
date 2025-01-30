@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import shopifyService from '../services/shopify';
+import { Link } from 'react-router-dom';
 
 const Cart = ({ cart, removeFromCart }) => {
 
@@ -66,7 +67,7 @@ const Cart = ({ cart, removeFromCart }) => {
         </CartItems>
       ) : (
         <EmptyCart>Tu Carrito está vacio.
-          <StoreButton> <a href="/tienda">Volver a la tienda</a></StoreButton>
+          <StoreButton> <Link href="/tienda">Volver a la tienda</Link></StoreButton>
         </EmptyCart>
         
       )}

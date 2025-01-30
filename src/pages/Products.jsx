@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import pImage from '../assets/images/product.png';
+import { Link } from 'react-router-dom';
 
 const mezcales = [
   {
@@ -67,7 +68,7 @@ const Products = () => {
             </ProductDescription>
             <Notas>{product.info}</Notas>
           </TopProduct>
-          <ProductButton> <a href="/tienda">Compra ahora</a></ProductButton>
+          <ProductButton> <Link href="/tienda">Compra ahora</Link></ProductButton>
         </ProductContainer>
       ))}
     </PageContainer>

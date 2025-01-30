@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import logo from "../assets/images/logo.png";
 import { FaBars, FaShoppingCart } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Header = ({cart}) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,22 +12,22 @@ const Header = ({cart}) => {
     <HeaderContainer>
       <Nav>
         <StyledLogo>
-          <a href="/">
+          <Link href="/">
             <img style={{ height: "100%", margin: "1rem" }} src={logo} alt="logo" />
-          </a>
+          </Link>
         </StyledLogo>
         <StyledList isOpen={isOpen}>
           <StyledElement>
-            <a href="/nosotros">Nosotros</a>
+            <Link href="/nosotros">Nosotros</Link>
           </StyledElement>
           <StyledElement>
-            <a href="/mezcales">Mezcales</a>
+            <Link href="/mezcales">Mezcales</Link>
           </StyledElement>
           <StyledElement>
-            <a href="/recetas">Recetas</a>
+            <Link href="/recetas">Recetas</Link>
           </StyledElement>
           <StyledElement>
-            <a href="/tienda">Tienda</a>
+            <Link href="/tienda">Tienda</Link>
           </StyledElement>
         </StyledList>
         <NavLink to="/carrito">

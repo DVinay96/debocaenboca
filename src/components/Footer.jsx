@@ -1,16 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import gcclogo from "../assets/images/gcclogo.png";
 
 const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
         <FooterSectionLeft>
-          <FooterTitle>Quick Links</FooterTitle>
+          <FooterTitle>Enlaces Importantes</FooterTitle>
           <FooterLink href="/contact">Facturación</FooterLink>
-          <FooterLink href="/privacy">Política de Privacidad</FooterLink>
-          <FooterLink href="/terms">Aviso Legal</FooterLink>
+          <FooterLink href="/politicadeprivacidad">Política de Privacidad</FooterLink>
+          <FooterLink href="/ESR">Construyendo Una Empresa Sustentable</FooterLink>
+          <FooterLink href="/terms">Términos y condiciones</FooterLink>
         </FooterSectionLeft>
 
         <FooterSectionRight>
@@ -43,8 +45,15 @@ const Footer = () => {
           </ContactSection>
         </FooterSectionRight>
       </FooterContent>
-
-      <FooterBottom>Zuse Technologies 2024</FooterBottom>
+      <FooterBottom>
+        <GCCcontainer>
+          <img src={gcclogo} alt="GCC Logo" width="100px" />
+          <p>          "Mezcal de Boca en Boca" es una marca registrada de GCC International
+          </p>
+        </GCCcontainer>
+        Zuse Technologies 2024
+      
+      </FooterBottom>
     </FooterContainer>
   );
 };
@@ -121,4 +130,8 @@ const FooterBottom = styled.div`
   color: white;
 `;
 
+const GCCcontainer = styled.div`
+  margin-bottom: 0.5rem;
+  flex-direction: column;
+`;
 export default Footer;

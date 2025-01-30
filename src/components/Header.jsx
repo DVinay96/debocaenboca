@@ -4,7 +4,7 @@ import logo from "../assets/images/logo.png";
 import { FaBars, FaShoppingCart } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
-const Header = () => {
+const Header = ({cart}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,10 +30,17 @@ const Header = () => {
           </StyledElement>
         </StyledList>
         <NavLink to="/carrito">
-        <CartButton>
-          <FaShoppingCart />
-        </CartButton>
-        </NavLink>
+  <CartButtonContainer>
+    <CartButton>
+      <FaShoppingCart />
+    </CartButton>
+    {cart.length > 0 && (
+      <CartBadge>
+        {cart.reduce((total, item) => total + (item.quantity || 1), 0)}
+      </CartBadge>
+    )}
+  </CartButtonContainer>
+</NavLink>
         <StyledIcon onClick={() => setIsOpen(!isOpen)}>
           <FaBars />
         </StyledIcon>
@@ -115,6 +122,23 @@ const StyledList = styled.ul`
 
 const StyledLogo = styled.div`
   height: 100%;
+`;
+
+const CartBadge = styled.span`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4d4d;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  min-width: 20px;
+  text-align: center;
+`;
+
+const CartButtonContainer = styled.div`
+  position: relative;
 `;
 
 const CartButton = styled.button`

@@ -13,6 +13,7 @@ import grid9 from '../assets/images/grid9.jpeg';
 import grid10 from '../assets/images/grid10.jpeg';
 import grid11 from '../assets/images/grid11.jpg';
 import grid12 from '../assets/images/grid12.jpg';
+import maestroMezcalero from '../assets/images/maestromezcalero.jpeg';
 
 const images = [
   grid1,
@@ -37,6 +38,17 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+`;
+
+const fadeInAndZoom = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 `;
 
@@ -73,6 +85,15 @@ const Homepage = () => {
           </ImageItem>
         ))}
       </GridContainer>
+      <StoryMezcal>
+        <ImageStory src={maestroMezcalero} alt="Maestro Mezcalero"/>
+        <StoryText>
+          <h1>Espiridion Gaspar Rodríguez</h1>
+            <p>Hijo de la Sra. Mardona Rodríguez Monjaraz y del Sr. Teodoro Gaspar Martínez, nació el 8 de Diciembre de 1970, en la comunidad de Santo Tomás Quieri, Distrito de San Carlos Yautepec, Oaxaca. Pertenece a la tercera generación de una familia de maestros mezcaleros. Su padre fue el que le mostró el arte de hacer mezcal y así le está enseñando a su hijo Elmer Gaspar para que no se pierda la tradición. <br/><br/>
+              '»Hoy en día me siento orgulloso de ser parte de una familia mezcalera y llevar 15 años de experiencia en hacer el elíxir artesanal que me inspira a llevarlo para Ustedes DE BOCA EN BOCA.«'
+            </p>
+        </StoryText>
+      </StoryMezcal>
     </PageContainer>
   );
 };
@@ -93,7 +114,8 @@ const UpperContent = styled.div`
 const UpperImage = styled.img`
   margin-top: 2rem;
   width: 75%;
-  height: auto;
+  object-fit: cover;
+  height: 40vh;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s;
@@ -213,5 +235,33 @@ const Image = styled.img`
     }
   }
 `;
+
+const StoryMezcal = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  box-shadow: 10px 5px 20px rgba(0, 0, 0, 0.3);
+`
+
+const StoryText = styled.div`
+  margin: 3rem;
+  padding: 2rem;
+  font-size: 1.5vw;
+  line-height: 2;
+  font-weight: 600;
+`
+
+const ImageStory = styled.img`
+  width: 100%;
+  height: 80vh;
+  margin: 3rem;
+  border-radius: 10px;
+  animation: ${fadeInAndZoom} 1s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(148, 148, 149, 0.4);
+    }
+`
 
 export default Homepage;

@@ -2,25 +2,70 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import pImage from '../assets/images/product.png';
 
+const mezcales = [
+  {
+    id: 1,
+    name: "ESPADÍN",
+    clase: "Joven",
+    cultivo: "Siembra",
+    agave: "Agave Angustifolia",
+    crecimiento: "7 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    image: pImage,
+    price: 990,
+    info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
+  },
+  {
+    id: 2,
+    name: "MÉXICANO",
+    clase: "Joven",
+    cultivo: "Silvestre",
+    agave: "Agave Rhodacantha",
+    crecimiento: "8-10 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    image: pImage,
+    price: 1100,
+    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada ",
+  },
+  {
+    id: 1,
+    name: "ENSAMBLE",
+    clase: "Joven",
+    cultivo: "Siembra/Silvestre/Rhodacantha",
+    agave: "Agave Angustifolia",
+    crecimiento: "8-10 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    image: pImage,
+    price: 1390,
+    info:"Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
+  }
+];
 const Products = () => {
   return (
     <PageContainer>
-      {[...Array(3)].map((_, index) => (
-        <ProductContainer key={index}>
+      {mezcales.map((product) => (
+        <ProductContainer key={product.id}>
           <TopProduct>
             <ProductImage src={pImage} alt="Product" />
             <ProductDescription>
               <ProductText>
-                <strong>ESPADÍN</strong> <br />
-                Clase: Joven<br />
-                Manejo de cultivo: Siembra<br />
-                Agave: Agave Angustifolia <br />
-                Crecimiento del agave: 7 años<br />
-                Destilaciones: Doble destilación en ollas de cobre<br />
-                Tipo de horno: Cónico de piedra<br />
-                Tipo de molienda: Tahoma de piedra jalada por un caballo
+                <strong>{product.name}</strong> <br />
+                Clase: {product.clase}<br />
+                Manejo de cultivo: {product.cultivo}<br />
+                Agave: {product.agave} <br />
+                Crecimiento del agave: {product.crecimiento} <br />
+                Destilaciones: {product.destilacion}<br />
+                Tipo de horno: {product.horno}<br />
+                Tipo de molienda: {product.molienda}<br />
               </ProductText>
             </ProductDescription>
+            <Notas>{product.info}</Notas>
           </TopProduct>
           <ProductButton> <a href="/tienda">Compra ahora</a></ProductButton>
         </ProductContainer>
@@ -160,5 +205,12 @@ const ProductButton = styled.button`
     font-size: 0.9rem;
   }
 `;
+
+const Notas = styled.p`
+color: black;
+font-size: 1.2rem;
+padding: 3rem 3rem 0rem 3rem;
+font-weight: bold;
+`
 
 export default Products;

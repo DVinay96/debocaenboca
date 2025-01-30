@@ -1,6 +1,37 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import aboutImage from '../assets/images/grid9.jpeg';
+import aboutImage from '../assets/images/aboutHeader.jpg';
+
+const reviews = [
+  {
+    id: 1,
+    name: "María González",
+    date: "Marzo 2024",
+    rating: 5,
+    text: "Un mezcal excepcional con un sabor ahumado perfecto. La tradición y calidad se pueden saborear en cada gota."
+  },
+  {
+    id: 2,
+    name: "Carlos Ruiz",
+    date: "Febrero 2024",
+    rating: 5,
+    text: "Increíble descubrimiento. El mejor mezcal artesanal que he probado, con un equilibrio perfecto de sabores."
+  },
+  {
+    id: 3,
+    name: "Ana Valencia",
+    date: "Enero 2024",
+    rating: 4,
+    text: "Me encantó la complejidad de sabores y el aroma distintivo. Una verdadera joya de Oaxaca."
+  },
+  {
+    id: 4,
+    name: "Ana Valencia",
+    date: "Enero 2024",
+    rating: 4,
+    text: "Me encantó la complejidad de sabores y el aroma distintivo. Una verdadera joya de Oaxaca."
+  }
+];
 
 const About = () => {
   return (
@@ -21,22 +52,19 @@ const About = () => {
           </Paragraph>
         </ContentContainer>
 
-        <RestaurantSection>
-          <SectionTitle>Encuéntranos en:</SectionTitle>
-          <RestaurantList>
-            {[
-              { name: "La Cantina Paradise", location: "Oaxaca, Mexico" },
-              { name: "El Agave Azul", location: "Mexico City, Mexico" },
-              { name: "Tequila Sunrise", location: "Guadalajara, Mexico" },
-              { name: "Mezcaleria El Corazón", location: "Monterrey, Mexico" },
-            ].map((restaurant, index) => (
-              <RestaurantItem key={index}>
-                <RestaurantName>{restaurant.name}</RestaurantName>
-                <RestaurantLocation>{restaurant.location}</RestaurantLocation>
-              </RestaurantItem>
-            ))}
-          </RestaurantList>
-        </RestaurantSection>
+        <ReviewSection>
+          <SectionTitle>RESEÑAS</SectionTitle>
+          <ReviewContainer>
+            {reviews.map(review => (
+            <ReviewCard key={review.id}>
+              <ReviewerName>{review.name}</ReviewerName>
+              <ReviewDate>{review.date}</ReviewDate>
+              <Stars>{"★".repeat(review.rating)}{"☆".repeat(5-review.rating)}</Stars>
+              <ReviewText>{review.text}</ReviewText>
+      </ReviewCard>
+    ))}
+  </ReviewContainer>
+</ReviewSection>
       </AboutPageContainer>
     </Wrapper>
   );
@@ -115,7 +143,7 @@ const Paragraph = styled.p`
   animation: ${fadeIn} 1.4s ease-in-out;
 `;
 
-const RestaurantSection = styled.div`
+const ReviewSection = styled.div`
   margin-top: 3rem;
   padding: 2rem;
   background-color: #fff;
@@ -133,28 +161,47 @@ const SectionTitle = styled.h2`
   margin-bottom: 1.5rem;
 `;
 
-const RestaurantList = styled.ul`
-  list-style: none;
-  padding: 0;
+const ReviewContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  margin-top: 2rem;
 `;
 
-const RestaurantItem = styled.li`
-  margin-bottom: 1.5rem;
-  padding: 0.5rem;
-  transition: transform 0.3s, box-shadow 0.3s;
+const ReviewCard = styled.div`
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  animation: ${fadeIn} 1.8s ease-in-out;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   }
 `;
 
-const RestaurantName = styled.h3`
-  font-size: 1.25rem;
-  color: #333;
+const ReviewerName = styled.h3`
+  color: rgba(92,14,14);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 `;
 
-const RestaurantLocation = styled.p`
-  font-size: 1rem;
+const ReviewDate = styled.span`
   color: #666;
+  font-size: 0.9rem;
+`;
+
+const ReviewText = styled.p`
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+`;
+
+const Stars = styled.div`
+  color: #FFD700;
+  margin-bottom: 0.5rem;
 `;

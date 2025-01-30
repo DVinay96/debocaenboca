@@ -61,7 +61,7 @@ const Cart = ({ cart, removeFromCart }) => {
     </ButtonsContainer>
   </CartItem>
 ))}
-          <TotalPrice>Total: ${totalPrice.toFixed(2)}</TotalPrice>
+          <TotalPrice>SubTotal: ${totalPrice.toFixed(2)}</TotalPrice>
           <CheckoutButton onClick={handleCheckout}>Checkout</CheckoutButton>
         </CartItems>
       ) : (

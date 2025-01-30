@@ -9,6 +9,8 @@ import GlobalStyle from "./styles/globalStyles";
 import Products from "./pages/Products";
 import AgeVerifyModal from "./components/AgeVerifyModal";
 import Cart from "./pages/Cart";
+import Terms from "./pages/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function App() {
   const [isVerified, setIsVerified] = useState(false)
@@ -67,13 +69,16 @@ function App() {
       {isVerified && (
     <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Layout cart={cart} />}>
         <Route path="/" element={<Inicio />} />
         <Route path="/nosotros" element={<About />} />
         <Route path="/mezcales" element={<Products />} />
         <Route path="/recetas" element={<Recipes />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/politicadeprivacidad" element={<PrivacyPolicy />} />
         <Route path="/tienda" element={<Store addToCart={addToCart} removeFromCart={removeFromCart} />} />
         <Route path="/carrito" element={<Cart cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />
+
       </Route>
     </Routes>
   </BrowserRouter>

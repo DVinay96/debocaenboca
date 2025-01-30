@@ -68,7 +68,7 @@ const Products = () => {
             </ProductDescription>
             <Notas>{product.info}</Notas>
           </TopProduct>
-          <ProductButton> <Link href="/tienda">Compra ahora</Link></ProductButton>
+          <ProductButton> <Link to="/tienda">Compra ahora</Link></ProductButton>
         </ProductContainer>
       ))}
     </PageContainer>

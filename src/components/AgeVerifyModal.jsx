@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Logo from '../assets/images/logo.png'; // Adjust path accordingly
 
 const AgeVerifyModal = ({ onVerify }) => {
   const [error, setError] = useState('');
@@ -15,12 +16,17 @@ const AgeVerifyModal = ({ onVerify }) => {
   return (
     <ModalWrapper>
       <ModalContent>
+        <LogoImage src={Logo} alt="Site Logo" />
         <ModalHeader>¿Eres mayor de edad?</ModalHeader>
         <ButtonDiv>
-          <ModalButton onClick={handleYes}>Si</ModalButton>
+          <ModalButton onClick={handleYes}>Sí</ModalButton>
           <ModalButton onClick={handleNo}>No</ModalButton>
         </ButtonDiv>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+        {error && (
+          <ErrorContainer>
+            <ErrorMessage>{error}</ErrorMessage>
+          </ErrorContainer>
+        )}
       </ModalContent>
     </ModalWrapper>
   );
@@ -37,23 +43,29 @@ const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  background: rgba(0, 0, 0, 0.75);
   z-index: 1000;
 `;
 
 const ModalContent = styled.div`
-  background-color: #00000092;
+  background-color: #1a1a1a;
   padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   text-align: center;
   width: 100%;
   max-width: 400px;
+  color: #fff;
+`;
+
+const LogoImage = styled.img`
+  width: 30vh;
+  margin-bottom: 1rem;
 `;
 
 const ModalHeader = styled.h1`
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #ffffff;
 `;
 
 const ButtonDiv = styled.div`
@@ -63,7 +75,7 @@ const ButtonDiv = styled.div`
 `;
 
 const ModalButton = styled.button`
-  background-color: #bcbcbc;
+  background-color: rgba(92,14,14);
   color: white;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -73,11 +85,19 @@ const ModalButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color:rgba(92,14,14);
+    background-color: #a01010;
   }
 `;
 
-const ErrorMessage = styled.p`
-  color: #ffffff;
+const ErrorContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 1rem;
+`;
+
+
+const ErrorMessage = styled.p`
+  color: #ff4d4d;
+  font-weight: bold;
 `;

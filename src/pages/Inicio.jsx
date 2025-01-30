@@ -103,15 +103,22 @@ const PageContainer = styled.div`
   font-family: Arial, sans-serif;
   color: #333;
   animation: ${fadeIn} 1s ease-in-out;
+  width: 100%;
+  overflow-x: hidden;
 `;
 
 const UpperContent = styled.div`
+  margin-top: 2rem;
   display: flex;
-  justify-content: space-around;
-  padding: 2rem 0;
+  justify-content: center;
+  width: 100%;
+
+  @media (max-width: 768px) {
+  }
 `;
 
 const UpperImage = styled.img`
+  
   margin-top: 2rem;
   width: 75%;
   object-fit: cover;
@@ -126,10 +133,13 @@ const UpperImage = styled.img`
 
   @media (max-width: 768px) {
     width: 80%;
+    margin-top: 1rem;
+    height: 30vh;
   }
 
   @media (max-width: 480px) {
-    width: 100%;
+    width: 80%;
+    height: 25vh;
   }
 `;
 
@@ -138,8 +148,8 @@ const CTAButton = styled.button`
   color: black;
   border: none;
   border-radius: 5px;
-  padding: 1rem;
-  font-size: 1rem;
+  padding: 1rem 2rem;
+  font-size: 16px;
   margin-top: 2%;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
@@ -152,16 +162,17 @@ const CTAButton = styled.button`
   a {
     text-decoration: none;
     color: inherit;
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
-    padding: 12px 25px;
-    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 14px;
   }
 
   @media (max-width: 480px) {
-    padding: 10px 20px;
-    font-size: 0.7rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 12px;
   }
 `;
 
@@ -174,7 +185,6 @@ const MidSection = styled.section`
 const MainBox = styled.div`
   display: flex;
   justify-content: center;
-  font-size: 1.5vw;
   flex-wrap: wrap;
   background-color: #00000092;
   border-radius: 5px;
@@ -184,13 +194,13 @@ const MainBox = styled.div`
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
-    width: 80%;
-    padding: 2%;
+    width: 90%;
+    padding: 1.5rem;
   }
 
   @media (max-width: 480px) {
-    width: 100%;
-    padding: 2%;
+    width: 95%;
+    padding: 1rem;
   }
 `;
 
@@ -200,14 +210,39 @@ const BoxText = styled.p`
   word-spacing: 5px;
   line-height: 1.6;
   text-align: justify;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    letter-spacing: 1px;
+    word-spacing: 3px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    word-spacing: 2px;
+  }
 `;
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 15px;
   padding: 20px;
   margin: 0 2%;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 10px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    padding: 8px;
+  }
 `;
 
 const ImageItem = styled.div`
@@ -241,27 +276,68 @@ const StoryMezcal = styled.div`
   flex-direction: row;
   justify-content: space-around;
   box-shadow: 10px 5px 20px rgba(0, 0, 0, 0.3);
-`
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+`;
 
 const StoryText = styled.div`
   margin: 3rem;
   padding: 2rem;
-  font-size: 1.5vw;
+  font-size: 16px;
   line-height: 2;
   font-weight: 600;
-`
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    margin: 1.5rem;
+    padding: 1rem;
+    font-size: 14px;
+    
+    h1 {
+      font-size: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    margin: 1rem;
+    padding: 0.5rem;
+    font-size: 12px;
+    
+    h1 {
+      font-size: 18px;
+    }
+  }
+`;
 
 const ImageStory = styled.img`
-  width: 100%;
-  height: 80vh;
+  width: 45%;
+  height: auto;
   margin: 3rem;
   border-radius: 10px;
   animation: ${fadeInAndZoom} 1s ease-out;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
   &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 20px 40px rgba(148, 148, 149, 0.4);
-    }
-`
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(148, 148, 149, 0.4);
+  }
 
+  @media (max-width: 768px) {
+    width: 80%;
+    margin: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 90%;
+    margin: 1rem;
+  }
+`;
 export default Homepage;

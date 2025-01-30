@@ -48,7 +48,6 @@ const Recipes = () => {
           <source src={recipeVideo} type="video/mp4" />
         </Video>
       </VideoContainer>
-
       <RecipeCards>
         {drinks.map((drink, index) => (
           <RecipeCard key={index}>
@@ -102,6 +101,11 @@ const RecipesPageContainer = styled.div`
   align-items: center;
   padding: 2rem;
   animation: ${fadeIn} 1s ease-in-out;
+  @media (max-width: 768px) {
+    max-width: 80%;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const VideoContainer = styled.div`
@@ -109,6 +113,11 @@ const VideoContainer = styled.div`
   max-width: 800px;
   margin-bottom: 2rem;
   animation: ${fadeIn} 1.5s ease-in-out;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
 `;
 
 const Video = styled.video`
@@ -121,8 +130,7 @@ const Video = styled.video`
 const RecipeCards = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
+  align-items: center;
   gap: 2rem;
   margin-top: 1rem;
 `;
@@ -159,7 +167,7 @@ const DrinkImage = styled.img`
   }
 
   @media (min-width: 768px) {
-    width: 50%;
+    width: 80vw;
   }
 `;
 

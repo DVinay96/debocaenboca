@@ -150,23 +150,45 @@ const ReviewSection = styled.div`
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: calc(100% - 4rem);
-  max-width: 800px;
+  max-width: 1200px;
   text-align: center;
   animation: ${fadeIn} 1.6s ease-in-out;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    width: calc(100% - 2rem);
+    margin-top: 2rem;
+  }
 `;
 
 const SectionTitle = styled.h2`
   font-size: 2rem;
   color: rgba(92,14,14);
   margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const ReviewContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   width: 100%;
   margin-top: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
 `;
 
 const ReviewCard = styled.div`
@@ -174,12 +196,16 @@ const ReviewCard = styled.div`
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: ${fadeIn} 1.8s ease-in-out;
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.25rem;
   }
 `;
 
@@ -187,11 +213,21 @@ const ReviewerName = styled.h3`
   color: rgba(92,14,14);
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const ReviewDate = styled.span`
   color: #666;
   font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const ReviewText = styled.p`
@@ -199,9 +235,20 @@ const ReviewText = styled.p`
   font-size: 1rem;
   line-height: 1.6;
   margin: 1rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0.75rem 0;
+  }
 `;
 
 const Stars = styled.div`
   color: #FFD700;
   margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;

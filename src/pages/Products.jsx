@@ -88,11 +88,13 @@ const fadeIn = keyframes`
 `;
 
 const PageContainer = styled.div`
+  position: relative;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   animation: ${fadeIn} 1s ease-in-out;
+  z-index: 0;
 `;
 
 const ProductContainer = styled.div`
@@ -141,7 +143,7 @@ const ProductDescription = styled.div`
   animation: ${fadeIn} 1.2s ease-in-out;
 
   @media (max-width: 768px) {
-    width: 100%;
+    width: 90%;
     font-size: 0.9rem;
   }
 `;

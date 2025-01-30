@@ -118,11 +118,14 @@ const StyledList = styled.ul`
     text-align: center;
     border-top: 2px solid #cc9f22;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
+    z-index: 50;
   }
 `;
 
 const StyledLogo = styled.div`
   height: 100%;
+  z-index: 1002;
+
 `;
 
 const CartBadge = styled.span`
@@ -136,6 +139,10 @@ const CartBadge = styled.span`
   font-size: 0.8rem;
   min-width: 20px;
   text-align: center;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const CartButtonContainer = styled.div`
@@ -153,13 +160,21 @@ const CartButton = styled.button`
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease;
+  z-index: 1001; // Add z-index
 
   &:hover {
     background-color: #a67c14;
   }
 
   @media (max-width: 768px) {
-    display: none;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    position: fixed; 
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   }
 `;
 

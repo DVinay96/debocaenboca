@@ -12,22 +12,22 @@ const Header = ({cart}) => {
     <HeaderContainer>
       <Nav>
         <StyledLogo>
-          <Link href="/">
+          <Link to="/">
             <img style={{ height: "100%", margin: "1rem" }} src={logo} alt="logo" />
           </Link>
         </StyledLogo>
         <StyledList isOpen={isOpen}>
           <StyledElement>
-            <Link href="/nosotros">Nosotros</Link>
+            <Link to="/nosotros">Nosotros</Link>
           </StyledElement>
           <StyledElement>
-            <Link href="/mezcales">Mezcales</Link>
+            <Link to="/mezcales">Mezcales</Link>
           </StyledElement>
           <StyledElement>
-            <Link href="/recetas">Recetas</Link>
+            <Link to="/recetas">Recetas</Link>
           </StyledElement>
           <StyledElement>
-            <Link href="/tienda">Tienda</Link>
+            <Link to="/tienda">Tienda</Link>
           </StyledElement>
         </StyledList>
         <NavLink to="/carrito">

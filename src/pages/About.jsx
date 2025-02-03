@@ -6,30 +6,44 @@ const reviews = [
   {
     id: 1,
     name: "María González",
-    date: "Marzo 2024",
+    location: "Puebla, Puebla.",
     rating: 5,
     text: "Un mezcal excepcional con un sabor ahumado perfecto. La tradición y calidad se pueden saborear en cada gota."
   },
   {
     id: 2,
-    name: "Carlos Ruiz",
-    date: "Febrero 2024",
+    name: "Octavio Bello",
+    location: "CDMX, México.",
     rating: 5,
-    text: "Increíble descubrimiento. El mejor mezcal artesanal que he probado, con un equilibrio perfecto de sabores."
+    text: "No habia tomado mezcal, sin embargo al probar este la suavidad y los amoromas, los sabores citricos y ahumados son increibles"
   },
   {
     id: 3,
     name: "Ana Valencia",
-    date: "Enero 2024",
-    rating: 4,
+    location: "Oaxaca, Oaxaca.",
+    rating: 4.7,
     text: "Me encantó la complejidad de sabores y el aroma distintivo. Una verdadera joya de Oaxaca."
   },
   {
     id: 4,
-    name: "Ana Valencia",
-    date: "Enero 2024",
-    rating: 4,
+    name: "Carlos Ruiz",
+    dalocationte: "Oaxaca, Oaxaca.",
+    rating: 5,
     text: "Me encantó la complejidad de sabores y el aroma distintivo. Una verdadera joya de Oaxaca."
+  },
+  {
+    id: 5,
+    name: "Erica Morales",
+    location: "Celaya, Guanajuato.",
+    rating: 4.5,
+    text: "Excelentes notas de cata, un increible olor, sabor y textura del ensamble"
+  },
+  {
+    id: 6,
+    name: "Juan Carlos Morales",
+    dalocationte: "Puebla, Puebla.",
+    rating: 5,
+    text: "Increibles notas cítricas que dejan ricos matices en la boca al probarlo"
   }
 ];
 
@@ -58,7 +72,7 @@ const About = () => {
             {reviews.map(review => (
             <ReviewCard key={review.id}>
               <ReviewerName>{review.name}</ReviewerName>
-              <ReviewDate>{review.date}</ReviewDate>
+              <ReviewDate>{review.location}</ReviewDate>
               <Stars>{"★".repeat(review.rating)}{"☆".repeat(5-review.rating)}</Stars>
               <ReviewText>{review.text}</ReviewText>
       </ReviewCard>

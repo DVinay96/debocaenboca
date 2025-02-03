@@ -1,6 +1,8 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import pImage from '../assets/images/product.png';
+import espadinimg from '../assets/images/espadin.jpg';
+import mexicanoimg from '../assets/images/mexicano.jpg';
+import ensambleimg from '../assets/images/ensamble.jpg';
 import { Link } from 'react-router-dom';
 
 const mezcales = [
@@ -14,7 +16,7 @@ const mezcales = [
     destilacion: "Doble destilación en ollas de cobre",
     horno: "Cónico de piedra",
     molienda: "Tahoma de piedra jalada por un caballo",
-    image: pImage,
+    image: espadinimg,
     price: 990,
     info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
   },
@@ -28,7 +30,7 @@ const mezcales = [
     destilacion: "Doble destilación en ollas de cobre",
     horno: "Cónico de piedra",
     molienda: "Tahoma de piedra jalada por un caballo",
-    image: pImage,
+    image: mexicanoimg,
     price: 1100,
     info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada ",
   },
@@ -42,7 +44,7 @@ const mezcales = [
     destilacion: "Doble destilación en ollas de cobre",
     horno: "Cónico de piedra",
     molienda: "Tahoma de piedra jalada por un caballo",
-    image: pImage,
+    image: ensambleimg,
     price: 1390,
     info:"Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
   }
@@ -53,7 +55,7 @@ const Products = () => {
       {mezcales.map((product) => (
         <ProductContainer key={product.id}>
           <TopProduct>
-            <ProductImage src={pImage} alt="Product" />
+            <ProductImage src={product.image} alt="Product" />
             <ProductDescription>
               <ProductText>
                 <strong>{product.name}</strong> <br />
@@ -120,7 +122,7 @@ const ProductContainer = styled.div`
 
 const TopProduct = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
@@ -149,7 +151,8 @@ const ProductDescription = styled.div`
 `;
 
 const ProductImage = styled.img`
-  width: 30%;
+  width: 65%;
+  margin-bottom: 1rem;
   border-radius: 10px;
   transition: transform 0.3s, box-shadow 0.3s;
 

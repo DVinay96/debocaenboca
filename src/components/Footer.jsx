@@ -48,10 +48,12 @@ const Footer = () => {
       <FooterBottom>
         <GCCcontainer>
           <img src={gcclogo} alt="GCC Logo" width="100px" />
-          <p>          "Mezcal de Boca en Boca" es una marca registrada de GCC International
+          <p>          "Mezcal de Boca en Boca" es una marca registrada de GCC International©
           </p>
         </GCCcontainer>
-        Zuse Technologies 2024
+        <PoweredBy>
+        Powered by Zuse Technologies 2024
+        </PoweredBy>
       
       </FooterBottom>
     </FooterContainer>
@@ -134,4 +136,8 @@ const GCCcontainer = styled.div`
   margin-bottom: 0.5rem;
   flex-direction: column;
 `;
+
+const PoweredBy = styled.p`
+font-size: .7rem;
+`
 export default Footer;

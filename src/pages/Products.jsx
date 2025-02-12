@@ -3,9 +3,26 @@ import styled, { keyframes } from 'styled-components';
 import espadinimg from '../assets/images/espadin.jpg';
 import mexicanoimg from '../assets/images/mexicano.jpg';
 import ensambleimg from '../assets/images/ensamble.jpg';
+import plata from '../assets/images/85point.png';
+import oro from '../assets/images/92point.png';
 import { Link } from 'react-router-dom';
 
 const mezcales = [
+  {
+    id: 3,
+    name: "ENSAMBLE",
+    clase: "Joven",
+    cultivo: "Siembra/Silvestre/Rhodacantha",
+    agave: "Agave Angustifolia",
+    crecimiento: "8-10 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    image: ensambleimg,
+    price: 1390,
+    info:"Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
+    stamp: oro
+  },
   {
     id: 1,
     name: "ESPADÍN",
@@ -19,6 +36,7 @@ const mezcales = [
     image: espadinimg,
     price: 990,
     info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
+    stamp: plata
   },
   {
     id: 2,
@@ -33,27 +51,19 @@ const mezcales = [
     image: mexicanoimg,
     price: 1100,
     info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada ",
+    stamp: plata
   },
-  {
-    id: 1,
-    name: "ENSAMBLE",
-    clase: "Joven",
-    cultivo: "Siembra/Silvestre/Rhodacantha",
-    agave: "Agave Angustifolia",
-    crecimiento: "8-10 años",
-    destilacion: "Doble destilación en ollas de cobre",
-    horno: "Cónico de piedra",
-    molienda: "Tahoma de piedra jalada por un caballo",
-    image: ensambleimg,
-    price: 1390,
-    info:"Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
-  }
 ];
 const Products = () => {
   return (
     <PageContainer>
       {mezcales.map((product) => (
         <ProductContainer key={product.id}>
+           <StampContainer>
+            <Stamp>
+              <StampImage src={product.stamp} alt='stamp'/> 
+            </Stamp>
+          </StampContainer>
           <TopProduct>
             <ProductImage src={product.image} alt="Product" />
             <ProductDescription>
@@ -110,7 +120,7 @@ const ProductContainer = styled.div`
   margin: 2rem auto;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   border-radius: 15px;
-  overflow: hidden;
+  overflow: visible;
   transform: scale(1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
@@ -218,5 +228,46 @@ font-size: 1.2rem;
 padding: 3rem 3rem 0rem 3rem;
 font-weight: bold;
 `
+
+const StampContainer = styled.div`
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  z-index: 1000;
+
+  @media (max-width: 768px) {
+    top: -15px;
+    right: -15px;
+  }
+
+  @media (max-width: 480px) {
+    top: -60px;
+    right: -120px;
+  }
+`;
+
+const Stamp = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-15deg);
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+  }
+`;
+
+const StampImage = styled.img`
+  width: 50%;
+  height: auto;
+  object-fit: contain;
+  
+`;
 
 export default Products;

@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import mainImage from '../assets/images/main.jpg';
+import mainImage from '../assets/images/mainbanner.jpeg';
 import grid1 from '../assets/images/grid1.jpg';
 import grid2 from '../assets/images/grid2.jpg';
 import grid3 from '../assets/images/grid3.jpeg';
@@ -11,9 +11,8 @@ import grid7 from '../assets/images/grid7.jpeg';
 import grid8 from '../assets/images/grid8.jpg';
 import grid9 from '../assets/images/grid9.jpeg';
 import grid10 from '../assets/images/grid10.jpeg';
-import grid11 from '../assets/images/grid11.jpg';
-import grid12 from '../assets/images/grid12.jpg';
 import maestroMezcalero from '../assets/images/maestromezcalero.jpeg';
+import cavaLogo from '../assets/images/cavaLogo.png'
 
 const images = [
   grid1,
@@ -26,8 +25,6 @@ const images = [
   grid8,
   grid9,
   grid10,
-  grid11,
-  grid12,
 ];
 
 const fadeIn = keyframes`
@@ -78,6 +75,23 @@ const Homepage = () => {
           </CTAButton>
         </MainBox>
       </MidSection>
+      <RewardContainer>
+        <CavaLogo src={cavaLogo}/>
+        <RewardText>
+        <h1> Mezcal de Boca en Boca, Top 99 Mezcales de 2025</h1>
+          En el 9° concurso de puntuacion de cata a ciegas organizado por Revista CAVA, "De Boca en Boca" se posicionó en el Top 99 Mezcales del 2025 <br/>
+          <ul>
+            <br/>
+            <li>Ensamble Espadin/Mexicano Medalla de Oro: 92 puntos.</li>
+            <br/>
+            <li>Espadin Medalla de Plata: 85 puntos.</li>
+            <br/>
+            <li>Mexicano Medalla de Plata: 85 puntos.</li>
+          </ul>
+
+        </RewardText>
+
+      </RewardContainer>
       <GridContainer>
         {images.map((src, index) => (
           <ImageItem key={index}>
@@ -120,12 +134,35 @@ const UpperContent = styled.div`
 const UpperImage = styled.img`
   
   margin-top: 2rem;
-  width: 75%;
-  object-fit: cover;
-  height: 40vh;
+  object-fit: contain;
+  height: 60vh;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s;
+
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: 80%;
+    margin-top: 1rem;
+    height: 30vh;
+  }
+
+  @media (max-width: 480px) {
+    width: 80%;
+    height: 25vh;
+  }
+`;
+const CavaLogo = styled.img`
+  width: 15vw;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+
 
   &:hover {
     transform: scale(1.05);
@@ -186,12 +223,10 @@ const MainBox = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  background-color: #00000092;
   border-radius: 5px;
   width: 75%;
   margin-bottom: 2rem;
   padding: 3rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     width: 90%;
@@ -205,12 +240,13 @@ const MainBox = styled.div`
 `;
 
 const BoxText = styled.p`
-  color: white;
+  color: black;
   letter-spacing: 2px;
   word-spacing: 5px;
   line-height: 1.6;
   text-align: justify;
-  font-size: 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
 
   @media (max-width: 768px) {
     font-size: 14px;
@@ -340,4 +376,36 @@ const ImageStory = styled.img`
     margin: 1rem;
   }
 `;
+
+const RewardContainer = styled.section`
+border-top: 1px black solid ;
+padding-top: 2rem;
+display: flex;
+text-align: center;
+justify-content: center;
+flex-direction: column;
+align-items: center;
+margin: 0rem 4rem 4rem 4rem;
+`
+
+const RewardText = styled.p`
+color: black;
+  letter-spacing: 2px;
+  word-spacing: 5px;
+  line-height: 2;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    letter-spacing: 1px;
+    word-spacing: 3px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    word-spacing: 2px;
+  }`
 export default Homepage;

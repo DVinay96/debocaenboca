@@ -39,7 +39,7 @@ const Footer = () => {
               info@mezcaldebocaenboca.com
             </FooterLink>
             <FooterLink>
-              PROLONGACION 15 SUR A-3 CLUB DE GOLF LA HUERTA SAN PEDRO CHOLULA,
+              PROLONGACION 15 SUR 2317 A INT 3 CLUB DE GOLF LA HUERTA SAN PEDRO CHOLULA,
               PUEBLA 72760
             </FooterLink>
           </ContactSection>

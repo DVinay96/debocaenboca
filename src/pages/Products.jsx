@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import espadinimg from '../assets/images/espadin.jpg';
 import mexicanoimg from '../assets/images/mexicano.jpg';
@@ -6,6 +6,39 @@ import ensambleimg from '../assets/images/ensamble.jpg';
 import plata from '../assets/images/85point.png';
 import oro from '../assets/images/92point.png';
 import { Link } from 'react-router-dom';
+
+// You can add these images to your assets folder
+// or replace with your own banner images
+import banner1 from '../assets/images/banner1.jpg'; // Add this image
+import banner2 from '../assets/images/banner2.jpg'; // Add this image
+
+const useIntersectionObserver = (options = {}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, {
+      root: null, 
+      threshold: 0.2,
+      ...options
+    });
+
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [options]);
+
+  return [ref, isVisible];
+};
 
 const mezcales = [
   {
@@ -20,8 +53,9 @@ const mezcales = [
     molienda: "Tahoma de piedra jalada por un caballo",
     image: ensambleimg,
     price: 1390,
-    info:"Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
-    stamp: oro
+    info: "Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
+    stamp: oro,
+    award: "Medalla de Oro: 92 puntos"
   },
   {
     id: 1,
@@ -36,7 +70,8 @@ const mezcales = [
     image: espadinimg,
     price: 990,
     info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
-    stamp: plata
+    stamp: plata,
+    award: "Medalla de Plata: 85 puntos"
   },
   {
     id: 2,
@@ -50,40 +85,134 @@ const mezcales = [
     molienda: "Tahoma de piedra jalada por un caballo",
     image: mexicanoimg,
     price: 1100,
-    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada ",
-    stamp: plata
+    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada",
+    stamp: plata,
+    award: "Medalla de Plata: 85 puntos"
   },
 ];
+
+const banners = [
+  {
+    id: 1,
+    image: banner1,
+    title: "Tradición Oaxaqueña",
+    text: "Nuestros mezcales son elaborados con métodos tradicionales que han pasado de generación en generación."
+  },
+  {
+    id: 2,
+    image: banner2,
+    title: "Agaves Seleccionados",
+    text: "Utilizamos únicamente agaves cultivados de manera sostenible, respetando los ciclos naturales de la planta."
+  }
+];
+
 const Products = () => {
   return (
     <PageContainer>
-      {mezcales.map((product) => (
-        <ProductContainer key={product.id}>
-           <StampContainer>
-            <Stamp>
-              <StampImage src={product.stamp} alt='stamp'/> 
-            </Stamp>
-          </StampContainer>
-          <TopProduct>
-            <ProductImage src={product.image} alt="Product" />
-            <ProductDescription>
-              <ProductText>
-                <strong>{product.name}</strong> <br />
-                Clase: {product.clase}<br />
-                Manejo de cultivo: {product.cultivo}<br />
-                Agave: {product.agave} <br />
-                Crecimiento del agave: {product.crecimiento} <br />
-                Destilaciones: {product.destilacion}<br />
-                Tipo de horno: {product.horno}<br />
-                Tipo de molienda: {product.molienda}<br />
-              </ProductText>
-            </ProductDescription>
-            <Notas>{product.info}</Notas>
-          </TopProduct>
-          <ProductButton> <Link to="/tienda">Compra ahora</Link></ProductButton>
-        </ProductContainer>
-      ))}
+      <PageTitle>Nuestros Mezcales</PageTitle>
+      <ProductsContainer>
+        {mezcales.map((product, index) => (
+          <React.Fragment key={product.id}>
+            <ProductSection 
+              product={product} 
+              isReversed={index % 2 !== 0}
+            />
+            
+            {index < mezcales.length - 1 && (
+              <BannerSection 
+                banner={banners[index % banners.length]} 
+              />
+            )}
+          </React.Fragment>
+        ))}
+      </ProductsContainer>
     </PageContainer>
+  );
+};
+
+const ProductSection = ({ product, isReversed }) => {
+  const [ref, isVisible] = useIntersectionObserver();
+  
+  return (
+    <ProductRow 
+      ref={ref} 
+      className={isVisible ? 'visible' : ''}
+      isReversed={isReversed}
+    >
+      <ProductImageColumn isReversed={isReversed}>
+        <ProductImageWrapper>
+          <MedalImage src={product.stamp} alt="Award" />
+          <ProductImage src={product.image} alt={product.name} />
+        </ProductImageWrapper>
+      </ProductImageColumn>
+      
+      <ProductInfoColumn isReversed={isReversed}>
+        <ProductHeader>
+          <ProductName>{product.name}</ProductName>
+          <ProductPrice>${product.price} <span>MXN</span></ProductPrice>
+        </ProductHeader>
+        
+        <SpecsSection>
+          <SpecsTitle>Especificaciones</SpecsTitle>
+          <SpecsGrid>
+            <SpecItem>
+              <SpecLabel>Clase</SpecLabel>
+              <SpecValue>{product.clase}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Agave</SpecLabel>
+              <SpecValue>{product.agave}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Crecimiento</SpecLabel>
+              <SpecValue>{product.crecimiento}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Cultivo</SpecLabel>
+              <SpecValue>{product.cultivo}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Destilación</SpecLabel>
+              <SpecValue>{product.destilacion}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Horno</SpecLabel>
+              <SpecValue>{product.horno}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Molienda</SpecLabel>
+              <SpecValue>{product.molienda}</SpecValue>
+            </SpecItem>
+          </SpecsGrid>
+        </SpecsSection>
+        
+        <NotesSection>
+          <NotesTitle>Notas de Cata</NotesTitle>
+          <NotesText>{product.info}</NotesText>
+        </NotesSection>
+        
+        <PurchaseButton>
+          <Link to="/tienda">Comprar ahora</Link>
+        </PurchaseButton>
+      </ProductInfoColumn>
+    </ProductRow>
+  );
+};
+
+const BannerSection = ({ banner }) => {
+  const [ref, isVisible] = useIntersectionObserver();
+  
+  return (
+    <BannerContainer
+      ref={ref}
+      className={isVisible ? 'visible' : ''}
+    >
+      <BannerImage src={banner.image} alt={banner.title} />
+      <BannerOverlay>
+        <BannerTitle>{banner.title}</BannerTitle>
+        <BannerText>{banner.text}</BannerText>
+      </BannerOverlay>
+    </BannerContainer>
   );
 };
 
@@ -91,7 +220,7 @@ const Products = () => {
 const fadeIn = keyframes`
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -99,175 +228,361 @@ const fadeIn = keyframes`
   }
 `;
 
+const slideInLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const slideInRight = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+// Styled Components
 const PageContainer = styled.div`
-  position: relative;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: ${fadeIn} 1s ease-in-out;
-  z-index: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
 `;
 
-const ProductContainer = styled.div`
-  width: 100%;
-  background: linear-gradient(145deg, #e8d8c3, #b1a492);
-  max-width: 900px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 2rem auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-  overflow: visible;
-  transform: scale(1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+const PageTitle = styled.h1`
+  font-size: 2.5rem;
+  color: #5c0e0e;
+  text-align: center;
+  margin-bottom: 4rem;
+  font-weight: 500;
+  margin-top: 6rem;
+  
+  &::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: #5c0e0e;
+    margin: 1rem auto 0;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin-bottom: 2rem;
   }
 `;
 
-const TopProduct = styled.div`
+const ProductsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 1.5rem;
+  gap: 4rem;
+`;
 
-  @media (max-width: 768px) {
+const ProductRow = styled.section`
+  display: flex;
+  flex-direction: ${props => props.isReversed ? 'row-reverse' : 'row'};
+  align-items: center;
+  gap: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    animation: ${fadeIn} 0.8s ease forwards;
+  }
+  
+  @media (max-width: 992px) {
     flex-direction: column;
-    align-items: flex-start;
+    gap: 2rem;
   }
 `;
 
-const ProductDescription = styled.div`
-  width: 60%;
-  padding: 1.5rem;
-  font-size: 1rem;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  animation: ${fadeIn} 1.2s ease-in-out;
-
-  @media (max-width: 768px) {
-    width: 90%;
-    font-size: 0.9rem;
+const ProductImageColumn = styled.div`
+  flex: 1;
+  opacity: 0;
+  animation: ${props => props.isReversed ? slideInRight : slideInLeft} 0.8s ease forwards 0.2s;
+  
+  ${ProductRow}.visible & {
+    opacity: 1;
   }
+  
+  @media (max-width: 992px) {
+    width: 100%;
+  }
+`;
+
+const ProductImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 `;
 
 const ProductImage = styled.img`
-  width: 65%;
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+  
+  ${ProductImageWrapper}:hover & {
+    transform: scale(1.05);
+  }
+`;
+
+const MedalImage = styled.img`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 100px;
+  height: auto;
+  z-index: 10;
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+  transform: rotate(-10deg);
+  
+  @media (max-width: 768px) {
+    width: 80px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 60px;
+  }
+`;
+
+const ProductInfoColumn = styled.div`
+  flex: 1;
+  opacity: 0;
+  animation: ${props => props.isReversed ? slideInLeft : slideInRight} 0.8s ease forwards 0.2s;
+  
+  ${ProductRow}.visible & {
+    opacity: 1;
+  }
+`;
+
+const ProductHeader = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const ProductName = styled.h2`
+  font-size: 2.2rem;
+  color: #5c0e0e;
+  margin-bottom: 0.5rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
+`;
+
+const ProductPrice = styled.div`
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  
+  span {
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    
+    span {
+      font-size: 0.9rem;
+    }
+  }
+`;
+
+const SpecsSection = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const SpecsTitle = styled.h3`
+  font-size: 1.3rem;
+  color: #5c0e0e;
   margin-bottom: 1rem;
-  border-radius: 10px;
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
-  }
-
+  font-weight: 600;
+  
   @media (max-width: 768px) {
-    width: 100%;
-    margin-bottom: 1rem;
+    font-size: 1.1rem;
   }
 `;
 
-const ProductText = styled.p`
-  color: white;
-  letter-spacing: 1.5px;
-  word-spacing: 3px;
-  line-height: 1.8;
+const SpecsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem 2rem;
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+`;
+
+const SpecItem = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const SpecLabel = styled.span`
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.2rem;
+`;
+
+const SpecValue = styled.span`
   font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+`;
 
+const NotesSection = styled.div`
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f8f5;
+  border-left: 3px solid #5c0e0e;
+  border-radius: 0 8px 8px 0;
+`;
+
+const NotesTitle = styled.h3`
+  font-size: 1.2rem;
+  color: #5c0e0e;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
 `;
 
-const ProductButton = styled.button`
-  background-color: rgba(92,14,14);
+const NotesText = styled.p`
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+  font-style: italic;
+`;
+
+const PurchaseButton = styled.button`
+  background-color: #5c0e0e;
   color: white;
   border: none;
-  margin: 1rem 0 2rem;
-  padding: 12px 24px;
-  border-radius: 10px;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 1.25rem;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  
   &:hover {
-    background-color: #b68e1f;
-    transform: translateY(-3px);
+    background-color: #7c1a1a;
+    transform: translateY(-2px);
   }
-
+  
   &:active {
-    background-color: #9f7d1b;
     transform: translateY(0);
   }
-
-  @media (max-width: 768px) {
-    padding: 10px 20px;
-    font-size: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-  }
-`;
-
-const Notas = styled.p`
-color: black;
-font-size: 1.2rem;
-padding: 3rem 3rem 0rem 3rem;
-font-weight: bold;
-`
-
-const StampContainer = styled.div`
-  position: absolute;
-  top: -20px;
-  right: -20px;
-  z-index: 1000;
-
-  @media (max-width: 768px) {
-    top: -15px;
-    right: -15px;
-  }
-
-  @media (max-width: 480px) {
-    top: -60px;
-    right: -120px;
-  }
-`;
-
-const Stamp = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-15deg);
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border-radius: 50%;
-  }
-`;
-
-const StampImage = styled.img`
-  width: 50%;
-  height: auto;
-  object-fit: contain;
   
+  a {
+    color: white;
+    text-decoration: none;
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+  }
+`;
+
+const BannerContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 2rem 0;
+  opacity: 0;
+  transform: translateY(30px);
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    animation: ${fadeIn} 0.8s ease forwards;
+  }
+  
+  @media (max-width: 768px) {
+    height: 250px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 200px;
+  }
+`;
+
+const BannerImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 6s ease;
+  
+  ${BannerContainer}:hover & {
+    transform: scale(1.1);
+  }
+`;
+
+const BannerOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 4rem;
+  
+  @media (max-width: 768px) {
+    padding: 0 2rem;
+  }
+`;
+
+const BannerTitle = styled.h3`
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
+`;
+
+const BannerText = styled.p`
+  color: white;
+  font-size: 1.2rem;
+  max-width: 60%;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    max-width: 80%;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
 `;
 
 export default Products;

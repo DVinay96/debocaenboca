@@ -48,37 +48,6 @@ const carouselImages = [
 
 // Animation keyframes
 
-const slideInFromLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const slideInFromRight = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const fadeInSlow = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
 const floatAnimation = keyframes`
   0% {
     transform: translateY(0px);
@@ -191,7 +160,7 @@ const HomepageWithAgeVerification = ({ onVerify }) => {
             isActive={index === currentImageIndex}
           >
             <h2> - sabor tradicional -</h2>
-            <h1> El mezcal se toma a besos</h1>
+            <h1> No lo bebas... besalo</h1>
             <CTAButton> Explora de Boca en Boca</CTAButton>
             <CarouselIndicators>
               {carouselImages.map((_, dotIndex) => (

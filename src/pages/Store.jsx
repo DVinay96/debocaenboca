@@ -1,13 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import shopifyService from '../services/shopify';
 import productImage from '../assets/images/product.png';
+import bgPattern from '../assets/images/bg-pattern.png'; // Optional: Add a subtle pattern
+
+const useIntersectionObserver = (options = {}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, {
+      root: null, 
+      threshold: 0.2,
+      ...options
+    });
+
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [options]);
+
+  return [ref, isVisible];
+};
 
 const Store = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productQuantities, setProductQuantities] = useState({});
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -45,72 +76,171 @@ const Store = ({ addToCart }) => {
     }
   };
 
-  if (loading) return <LoadingMessage>Loading products...</LoadingMessage>;
-  if (error) return <ErrorMessage>{error}</ErrorMessage>;
+  // Simple implementation - expand with real categories from your products
+  const filters = [
+    { id: 'all', name: 'All Products' },
+    { id: 'espadín', name: 'Espadín' },
+    { id: 'ensamble', name: 'Ensamble' },
+    { id: 'tobalá', name: 'Tobalá' }
+  ];
+
+  const filteredProducts = products.filter(product => {
+    const matchesFilter = activeFilter === 'all' || 
+      product.title.toLowerCase().includes(activeFilter.toLowerCase());
+    
+    const matchesSearch = searchQuery === '' ||
+      product.title.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesFilter && matchesSearch;
+  });
 
   return (
     <PageContainer>
-      <Title>Nuestros Mezcales</Title>
-      <ProductGrid>
-        {products.map((product) => (
-          <ProductCard key={product.id}>
-            <ProductImage
-              src={product.image?.url || productImage}
-              alt={product.image?.altText || product.title}
-            />
-            <ProductDetails>
-              <ProductName>{product.title}</ProductName>
-              <ProductPrice>
-                {product.price?.amount} {product.price?.currencyCode}
-              </ProductPrice>
-              <CartControls>
-                <QuantityButton onClick={() => handleQuantityChange(product.id, -1)}>
-                  -
-                </QuantityButton>
-                <CartCounter>{productQuantities[product.id] || 0}</CartCounter>
-                <QuantityButton onClick={() => handleQuantityChange(product.id, 1)}>
-                  +
-                </QuantityButton>
-              </CartControls>
-              <AddToCartButton
-                onClick={() => handleAddToCart(product)}
-                disabled={!product.availableForSale || (productQuantities[product.id] || 0) === 0}
+      <StoreHeader>
+        <Title>Tienda de Mezcal</Title>
+        <Subtitle>Descubre nuestra selección artesanal</Subtitle>
+      </StoreHeader>
+
+      <FiltersContainer>
+        <FiltersRow>
+          <FilterButtons>
+            {filters.map(filter => (
+              <FilterButton 
+                key={filter.id}
+                active={activeFilter === filter.id}
+                onClick={() => setActiveFilter(filter.id)}
               >
-                {product.availableForSale ? 'Add to Cart' : 'Out of Stock'}
-              </AddToCartButton>
-            </ProductDetails>
-          </ProductCard>
-        ))}
-      </ProductGrid>
+                {filter.name}
+              </FilterButton>
+            ))}
+          </FilterButtons>
+          <SearchContainer>
+            <SearchInput 
+              type="text" 
+              placeholder="Buscar..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </SearchContainer>
+        </FiltersRow>
+      </FiltersContainer>
+
+      {loading ? (
+        <LoadingContainer>
+          <Spinner />
+          <LoadingText>Cargando productos...</LoadingText>
+        </LoadingContainer>
+      ) : error ? (
+        <ErrorContainer>
+          <ErrorMessage>{error}</ErrorMessage>
+          <RetryButton onClick={() => window.location.reload()}>
+            Intentar nuevamente
+          </RetryButton>
+        </ErrorContainer>
+      ) : (
+        <>
+          <ResultCount>
+            {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}
+          </ResultCount>
+          
+          <ProductsGrid>
+            {filteredProducts.map((product, index) => (
+              <ProductCard key={product.id} product={product} index={index} addToCart={addToCart} />
+            ))}
+          </ProductsGrid>
+          
+          {filteredProducts.length === 0 && (
+            <NoResultsMessage>
+              No se encontraron productos que coincidan con tu búsqueda.
+            </NoResultsMessage>
+          )}
+        </>
+      )}
     </PageContainer>
   );
 };
 
-export default Store;
+const ProductCard = ({ product, index, addToCart }) => {
+  const [ref, isVisible] = useIntersectionObserver();
+  const [quantity, setQuantity] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
+  const handleQuantityChange = (delta) => {
+    setQuantity(prev => Math.max(0, prev + delta));
+  };
 
+  const handleAddToCart = () => {
+    if (quantity > 0) {
+      addToCart({ ...product, quantity });
+      setQuantity(0); // Reset quantity after adding to cart
+    }
+  };
 
-const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: #666;
-`;
-
-const ErrorMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  color: #dc3545;
-  font-size: 1.2rem;
-`;
-
-
+  return (
+    <CardContainer 
+      ref={ref}
+      className={isVisible ? 'visible' : ''}
+      animationDelay={index * 0.1}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <CardImageContainer>
+        <CardImage 
+          src={product.image?.url || productImage}
+          alt={product.image?.altText || product.title}
+        />
+        {product.availableForSale ? (
+          <ProductTag>Disponible</ProductTag>
+        ) : (
+          <ProductTag outOfStock>Agotado</ProductTag>
+        )}
+      </CardImageContainer>
+      
+      <CardContent>
+        <ProductName>{product.title}</ProductName>
+        <ProductDescription>
+          {product.description || "Mezcal artesanal de la más alta calidad, elaborado en Oaxaca."}
+        </ProductDescription>
+        <PriceRow>
+          <ProductPrice>
+            ${product.price?.amount} {product.price?.currencyCode || 'MXN'}
+          </ProductPrice>
+        </PriceRow>
+        
+        <CardActions>
+          <QuantityControl>
+            <QuantityButton 
+              onClick={() => handleQuantityChange(-1)}
+              disabled={quantity <= 0}
+            >
+              −
+            </QuantityButton>
+            <QuantityDisplay>{quantity}</QuantityDisplay>
+            <QuantityButton 
+              onClick={() => handleQuantityChange(1)}
+              disabled={!product.availableForSale}
+            >
+              +
+            </QuantityButton>
+          </QuantityControl>
+          
+          <AddButton 
+            onClick={handleAddToCart}
+            disabled={!product.availableForSale || quantity === 0}
+          >
+            Agregar al carrito
+          </AddButton>
+        </CardActions>
+      </CardContent>
+    </CardContainer>
+  );
+};
 
 // Animations
 const fadeIn = keyframes`
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -118,135 +248,365 @@ const fadeIn = keyframes`
   }
 `;
 
-const slideIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
+const spin = keyframes`
   to {
-    opacity: 1;
-    transform: translateX(0);
+    transform: rotate(360deg);
   }
 `;
 
+const pulseAnimation = keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(92, 14, 14, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(92, 14, 14, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(92, 14, 14, 0);
+  }
+`;
+
+// Styled Components
 const PageContainer = styled.div`
-  padding: 2rem;
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 3rem 2rem;
   min-height: 100vh;
-  animation: ${fadeIn} 1s ease-in-out;
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
+`;
+
+const StoreHeader = styled.header`
+  text-align: center;
+  margin-bottom: 3rem;
+  margin-top: 6rem;
 `;
 
 const Title = styled.h1`
-  text-align: center;
-  margin-bottom: 2rem;
   font-size: 3rem;
-  color:  rgba(92,14,14);
-`;
-
-const ProductGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3rem;
-  padding: 2rem;
-`;
-
-const ProductCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(145deg, #e8d8c3, #b1a492);
-  padding: 1rem;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-  animation: ${slideIn} 1s ease-in-out;
-
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  color: #5c0e0e;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
   }
 `;
 
-const ProductImage = styled.img`
-  width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
+const Subtitle = styled.p`
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const FiltersContainer = styled.div`
+  margin-bottom: 2rem;
+  background: white;
   border-radius: 10px;
-  transition: transform 0.3s ease;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+`;
+
+const FiltersRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+`;
+
+const FilterButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+`;
+
+const FilterButton = styled.button`
+  background-color: ${props => props.active ? '#5c0e0e' : 'transparent'};
+  color: ${props => props.active ? 'white' : '#5c0e0e'};
+  border: 1px solid #5c0e0e;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
   &:hover {
+    background-color: ${props => props.active ? '#5c0e0e' : 'rgba(92, 14, 14, 0.1)'};
+  }
+`;
+
+const SearchContainer = styled.div`
+  position: relative;
+  width: 250px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #5c0e0e;
+    box-shadow: 0 0 0 3px rgba(92, 14, 14, 0.1);
+  }
+`;
+
+const ResultCount = styled.div`
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+const ProductsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const CardContainer = styled.div`
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  
+  &.visible {
+    animation: ${fadeIn} 0.8s forwards;
+    animation-delay: ${props => props.animationDelay || 0}s;
+  }
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const CardImageContainer = styled.div`
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  
+  ${CardContainer}:hover & {
     transform: scale(1.05);
   }
 `;
 
-const ProductDetails = styled.div`
-  text-align: center;
+const ProductTag = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: ${props => props.outOfStock ? '#e74c3c' : '#5c0e0e'};
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+`;
+
+const CardContent = styled.div`
+  padding: 1.5rem;
 `;
 
 const ProductName = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   margin-bottom: 0.5rem;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const ProductPrice = styled.p`
-  font-size: 1.125rem;
+const ProductDescription = styled.p`
+  color: #666;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
-  color:  black;
-  font-weight: bold;
+  line-height: 1.5;
+  
+  /* Limit to 3 lines of text */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 4rem;
 `;
 
-const CartControls = styled.div`
+const PriceRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 0.5rem 0;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+`;
+
+const ProductPrice = styled.div`
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #5c0e0e;
+`;
+
+const CardActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
+
+const QuantityControl = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
 const QuantityButton = styled.button`
-  background-color: rgba(92,14,14);
+  flex: 0 0 40px;
+  height: 40px;
+  border: none;
+  background-color: #5c0e0e;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover:not(:disabled) {
+    background-color: #7c1a1a;
+  }
+  
+  &:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+`;
+
+const QuantityDisplay = styled.div`
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+`;
+
+const AddButton = styled.button`
+  background-color: #5c0e0e;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 8px;
+  padding: 0.8rem;
   font-size: 1rem;
-  margin: 0 0.5rem;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: rgba(92,14,14);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background-color: #7c1a1a;
+    animation: ${pulseAnimation} 1.5s infinite;
   }
-
+  
   &:disabled {
-    background-color: #ccc;
+    background-color: #ddd;
     cursor: not-allowed;
   }
 `;
 
-const CartCounter = styled.span`
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333;
-  width: 40px;
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+`;
+
+const Spinner = styled.div`
+  width: 48px;
+  height: 48px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #5c0e0e;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+  margin-bottom: 1rem;
+`;
+
+const LoadingText = styled.p`
+  color: #666;
+  font-size: 1.1rem;
+`;
+
+const ErrorContainer = styled.div`
   text-align: center;
+  padding: 3rem;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 10px;
+  margin: 2rem 0;
 `;
 
-const AddToCartButton = styled.button`
-  background-color: #ffdd57;
-  color: #fff;
+const ErrorMessage = styled.p`
+  color: #e74c3c;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+`;
+
+const RetryButton = styled.button`
+  background-color: #5c0e0e;
+  color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
-
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
   &:hover {
-    background-color: #ffc800;
-  }
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+    background-color: #7c1a1a;
   }
 `;
 
+const NoResultsMessage = styled.div`
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+`;
 
+export default Store;

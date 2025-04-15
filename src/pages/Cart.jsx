@@ -24,7 +24,7 @@ const Cart = ({ cart, removeFromCart }) => {
     }
   };
 
-  const groupedCart = cart.reduce((acc, product) => {
+  const groupedCart = cart?.reduce((acc, product) => {
     const existingProduct = acc.find((item) => item.id === product.id);
     if (existingProduct) {
       existingProduct.quantity += product.quantity;
@@ -32,7 +32,7 @@ const Cart = ({ cart, removeFromCart }) => {
       acc.push({ ...product });
     }
     return acc;
-  }, []);
+  }, []) || [];
 
   const subtotal = groupedCart.reduce(
     (total, product) => total + (parseFloat(product.price?.amount || 0) * product.quantity),
@@ -51,14 +51,14 @@ const Cart = ({ cart, removeFromCart }) => {
           <FaShoppingCart size={24} />
           Tu Carrito
         </CartTitle>
-        {cart.length > 0 && (
+        {cart && cart.length > 0 && (
           <CartSummary>
             {groupedCart.length} {groupedCart.length === 1 ? 'producto' : 'productos'}
           </CartSummary>
         )}
       </CartHeader>
 
-      {cart.length > 0 ? (
+      {cart && cart.length > 0 ? (
         <CartContent>
           <CartItemsSection>
             {groupedCart.map((product) => (

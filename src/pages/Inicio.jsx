@@ -1,39 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import mainImage from "../assets/images/main.jpg";
-import grid1 from "../assets/images/grid1.jpg";
-import grid2 from "../assets/images/grid2.jpg";
-import grid3 from "../assets/images/grid3.jpeg";
-import grid4 from "../assets/images/grid4.jpg";
-import grid5 from "../assets/images/grid5.jpg";
-import grid6 from "../assets/images/grid6.jpeg";
-import grid7 from "../assets/images/grid7.jpeg";
-import grid8 from "../assets/images/grid8.jpg";
-import grid9 from "../assets/images/grid9.jpeg";
-import grid10 from "../assets/images/grid10.jpeg";
-import grid11 from "../assets/images/grid11.jpg";
-import grid12 from "../assets/images/grid12.jpg";
-import maestroMezcalero from "../assets/images/maestromezcalero.jpeg";
 import AgeVerifyModal from "../components/AgeVerifyModal";
 import Button from "../components/Button";
 import TopTitle from "../components/TopTitle";
 import Title from "../components/Title";
-
-const images = [
-  grid1,
-  grid2,
-  grid3,
-  grid4,
-  grid5,
-  grid6,
-  grid7,
-  grid8,
-  grid9,
-  grid10,
-  grid11,
-  grid12,
-];
-
+import Bottle from "../sections/bottle";
+import hero1 from "../assets/images/hero1.png";
+import hero2 from "../assets/images/hero2.png";
+import hero3 from "../assets/images/hero3.png";
+import Subtitle from "../components/Subtitle";
+import Store from "../sections/Store";
+import Testimonials from "../sections/Testimonials";
+import { Link } from "react-router-dom";
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -109,13 +88,43 @@ const Homepage = () => {
         <UpperContain>
           <TopTitle>Timeless flavor</TopTitle>
           <Title size="XL">special release</Title>
-          <Button icon inverted>
-            Explorar
-          </Button>
+          <Link to="mezcales">
+            <Button icon inverted>
+              Explorar
+            </Button>
+          </Link>
         </UpperContain>
       </UpperContent>
 
-      <MidSection>
+      <Bottle />
+
+      <Hero>
+        <a href="/nosotros">
+          <img src={hero2} alt="" />
+          <HeroText>
+            <TopTitle>Nosotros</TopTitle>
+            <Subtitle color="white" align="left">
+              Maestros del mezcal artesanal
+            </Subtitle>
+          </HeroText>
+        </a>
+        <a href="/recetas">
+          <img src={hero1} alt="" />
+          <HeroText>
+            <TopTitle>Recetas</TopTitle>
+            <Subtitle color="white" align="left">
+              Sabor que inspira rituales
+            </Subtitle>
+          </HeroText>
+        </a>
+      </Hero>
+      <Store />
+      <Hero2>
+        <img src={hero3} alt="" />
+      </Hero2>
+      <Testimonials />
+
+      {/*  <MidSection>
         <MainBox>
           <BoxText>
             Fundada en 2021 en el corazón de Oaxaca, De Boca en Boca es una
@@ -134,13 +143,7 @@ const Homepage = () => {
           </CTAButton>
         </MainBox>
       </MidSection>
-      <GridContainer>
-        {images.map((src, index) => (
-          <ImageItem key={index}>
-            <Image src={src} alt={`Image ${index + 1}`} />
-          </ImageItem>
-        ))}
-      </GridContainer>
+
       <StoryMezcal>
         <ImageStory src={maestroMezcalero} alt="Maestro Mezcalero" />
         <StoryText>
@@ -159,10 +162,11 @@ const Homepage = () => {
             artesanal que me inspira a llevarlo para Ustedes DE BOCA EN BOCA.«'
           </p>
         </StoryText>
-      </StoryMezcal>
+      </StoryMezcal> */}
     </PageContainer>
   );
 };
+export default Homepage;
 
 // Styled Components
 const PageContainer = styled.div`
@@ -276,40 +280,6 @@ const BoxText = styled.p`
   text-align: justify;
 `;
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 15px;
-  padding: 20px;
-  margin: 0 2%;
-`;
-
-const ImageItem = styled.div`
-  overflow: hidden;
-  border-radius: 10px;
-  transition: transform 0.3s ease;
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-  border-radius: 10px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: 0;
-  animation: fadeIn 0.5s forwards;
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-`;
-
 const StoryMezcal = styled.div`
   display: flex;
   flex-direction: row;
@@ -338,4 +308,56 @@ const ImageStory = styled.img`
   }
 `;
 
-export default Homepage;
+const Hero = styled.div`
+  display: flex;
+  width: 100vw;
+  box-sizing: border-box;
+  a {
+    width: 50%;
+    height: 50vh;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    a {
+      width: 100%;
+      height: 50vh;
+    }
+  }
+`;
+
+const HeroText = styled.div`
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  font-size: 2rem;
+  animation: ${fadeIn} 1s ease-in-out;
+  text-align: left !important;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+`;
+
+const Hero2 = styled.div`
+  width: 100vw;
+  height: 40vh;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+`;

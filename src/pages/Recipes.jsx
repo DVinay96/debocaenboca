@@ -312,7 +312,6 @@ const float = keyframes`
 const PageContainer = styled.div`
   width: 100%;
   background-color: #f8f8f5;
-  margin-top: 5rem;
 
 `;
 

@@ -1,21 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled, { keyframes } from 'styled-components';
-import shopifyService from '../services/shopify';
-import productImage from '../assets/images/product.png';
-import bgPattern from '../assets/images/bg-pattern.png'; // Optional: Add a subtle pattern
+import React, { useState, useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
+import shopifyService from "../services/shopify";
+import productImage from "../assets/images/product.png";
+import storeBg from "../assets/images/store_hero.png";
 
 const useIntersectionObserver = (options = {}) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsVisible(entry.isIntersecting);
-    }, {
-      root: null, 
-      threshold: 0.2,
-      ...options
-    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.2,
+        ...options,
+      }
+    );
 
     const currentRef = ref.current;
     if (currentRef) {
@@ -37,8 +40,8 @@ const Store = ({ addToCart }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productQuantities, setProductQuantities] = useState({});
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,7 +51,7 @@ const Store = ({ addToCart }) => {
         setProducts(productsData);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch products');
+        setError("Failed to fetch products");
         console.error(err);
       } finally {
         setLoading(false);
@@ -78,84 +81,92 @@ const Store = ({ addToCart }) => {
 
   // Simple implementation - expand with real categories from your products
   const filters = [
-    { id: 'all', name: 'All Products' },
-    { id: 'espadín', name: 'Espadín' },
-    { id: 'ensamble', name: 'Ensamble' },
-    { id: 'tobalá', name: 'Tobalá' }
+    { id: "all", name: "All Products" },
+    { id: "espadín", name: "Espadín" },
+    { id: "ensamble", name: "Ensamble" },
+    { id: "tobalá", name: "Tobalá" },
   ];
 
-  const filteredProducts = products.filter(product => {
-    const matchesFilter = activeFilter === 'all' || 
+  const filteredProducts = products.filter((product) => {
+    const matchesFilter =
+      activeFilter === "all" ||
       product.title.toLowerCase().includes(activeFilter.toLowerCase());
-    
-    const matchesSearch = searchQuery === '' ||
+
+    const matchesSearch =
+      searchQuery === "" ||
       product.title.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     return matchesFilter && matchesSearch;
   });
 
   return (
     <PageContainer>
       <StoreHeader>
-        <Title>Tienda de Mezcal</Title>
-        <Subtitle>Descubre nuestra selección artesanal</Subtitle>
+        <GradientOverlay />
+        <StoreHeaderContainer>
+          <Subtitle>Descubre nuestra selección artesanal</Subtitle>
+        </StoreHeaderContainer>
       </StoreHeader>
 
       <FiltersContainer>
-        <FiltersRow>
-          <FilterButtons>
-            {filters.map(filter => (
-              <FilterButton 
-                key={filter.id}
-                active={activeFilter === filter.id}
-                onClick={() => setActiveFilter(filter.id)}
-              >
-                {filter.name}
-              </FilterButton>
-            ))}
-          </FilterButtons>
-          <SearchContainer>
-            <SearchInput 
-              type="text" 
-              placeholder="Buscar..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </SearchContainer>
-        </FiltersRow>
+        <FilterButtons>
+          {filters.map((filter) => (
+            <FilterButton
+              key={filter.id}
+              active={activeFilter === filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+            >
+              {filter.name}
+            </FilterButton>
+          ))}
+        </FilterButtons>
+        <SearchInput
+          type="text"
+          placeholder="Buscar..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </FiltersContainer>
+      <Container>
+        {loading ? (
+          <LoadingContainer>
+            <Spinner />
+            <LoadingText>Cargando productos...</LoadingText>
+          </LoadingContainer>
+        ) : error ? (
+          <ErrorContainer>
+            <ErrorMessage>{error}</ErrorMessage>
+            <RetryButton onClick={() => window.location.reload()}>
+              Intentar nuevamente
+            </RetryButton>
+          </ErrorContainer>
+        ) : (
+          <>
+            <ResultCount>
+              {filteredProducts.length} producto
+              {filteredProducts.length !== 1 ? "s" : ""} encontrado
+              {filteredProducts.length !== 1 ? "s" : ""}
+            </ResultCount>
 
-      {loading ? (
-        <LoadingContainer>
-          <Spinner />
-          <LoadingText>Cargando productos...</LoadingText>
-        </LoadingContainer>
-      ) : error ? (
-        <ErrorContainer>
-          <ErrorMessage>{error}</ErrorMessage>
-          <RetryButton onClick={() => window.location.reload()}>
-            Intentar nuevamente
-          </RetryButton>
-        </ErrorContainer>
-      ) : (
-        <>
-          <ResultCount>
-            {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}
-          </ResultCount>
-          
-          <ProductsGrid>
-            {filteredProducts.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} addToCart={addToCart} />
-            ))}
-          </ProductsGrid>
-          
-          {filteredProducts.length === 0 && (
-            <NoResultsMessage>
-              No se encontraron productos que coincidan con tu búsqueda.
-            </NoResultsMessage>
-          )}
-        </>
-      )}
+            <ProductsGrid>
+              {filteredProducts.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  index={index}
+                  addToCart={addToCart}
+                />
+              ))}
+            </ProductsGrid>
+
+            {filteredProducts.length === 0 && (
+              <NoResultsMessage>
+                No se encontraron productos que coincidan con tu búsqueda.
+              </NoResultsMessage>
+            )}
+          </>
+        )}
+      </Container>
     </PageContainer>
   );
 };
@@ -166,7 +177,7 @@ const ProductCard = ({ product, index, addToCart }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleQuantityChange = (delta) => {
-    setQuantity(prev => Math.max(0, prev + delta));
+    setQuantity((prev) => Math.max(0, prev + delta));
   };
 
   const handleAddToCart = () => {
@@ -177,15 +188,15 @@ const ProductCard = ({ product, index, addToCart }) => {
   };
 
   return (
-    <CardContainer 
+    <CardContainer
       ref={ref}
-      className={isVisible ? 'visible' : ''}
+      className={isVisible ? "visible" : ""}
       animationDelay={index * 0.1}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardImageContainer>
-        <CardImage 
+        <CardImage
           src={product.image?.url || productImage}
           alt={product.image?.altText || product.title}
         />
@@ -195,36 +206,37 @@ const ProductCard = ({ product, index, addToCart }) => {
           <ProductTag outOfStock>Agotado</ProductTag>
         )}
       </CardImageContainer>
-      
+
       <CardContent>
         <ProductName>{product.title}</ProductName>
         <ProductDescription>
-          {product.description || "Mezcal artesanal de la más alta calidad, elaborado en Oaxaca."}
+          {product.description ||
+            "Mezcal artesanal de la más alta calidad, elaborado en Oaxaca."}
         </ProductDescription>
         <PriceRow>
           <ProductPrice>
-            ${product.price?.amount} {product.price?.currencyCode || 'MXN'}
+            ${product.price?.amount} {product.price?.currencyCode || "MXN"}
           </ProductPrice>
         </PriceRow>
-        
+
         <CardActions>
           <QuantityControl>
-            <QuantityButton 
+            <QuantityButton
               onClick={() => handleQuantityChange(-1)}
               disabled={quantity <= 0}
             >
               −
             </QuantityButton>
             <QuantityDisplay>{quantity}</QuantityDisplay>
-            <QuantityButton 
+            <QuantityButton
               onClick={() => handleQuantityChange(1)}
               disabled={!product.availableForSale}
             >
               +
             </QuantityButton>
           </QuantityControl>
-          
-          <AddButton 
+
+          <AddButton
             onClick={handleAddToCart}
             disabled={!product.availableForSale || quantity === 0}
           >
@@ -267,40 +279,35 @@ const pulseAnimation = keyframes`
 `;
 
 // Styled Components
-const PageContainer = styled.div`
-  max-width: 80%;
-  margin: 0 auto;
-  padding: 3rem 2rem;
-  min-height: 100vh;
-
-  @media (max-width: 768px) {
-    padding: 2rem 1rem;
-  }
-`;
+const PageContainer = styled.div``;
 
 const StoreHeader = styled.header`
+  background-image: url(${storeBg});
+  background-position: center calc(100% + 100px);
+  background-size: cover;
   text-align: center;
-  margin-bottom: 3rem;
-  margin-top: 6rem;
+  height: 300px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-const Title = styled.h1`
-  font-size: 3rem;
-  color: #5c0e0e;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  
-  @media (max-width: 768px) {
-    font-size: 2.2rem;
-  }
+const StoreHeaderContainer = styled.div`
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Subtitle = styled.p`
   font-size: 1.2rem;
-  color: #666;
+  color: #fff;
   max-width: 600px;
   margin: 0 auto;
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }
@@ -312,17 +319,10 @@ const FiltersContainer = styled.div`
   border-radius: 10px;
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-`;
-
-const FiltersRow = styled.div`
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1rem;
-  }
 `;
 
 const FilterButtons = styled.div`
@@ -330,7 +330,7 @@ const FilterButtons = styled.div`
   gap: 0.5rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
-  
+
   @media (max-width: 768px) {
     width: 100%;
     justify-content: flex-start;
@@ -338,8 +338,8 @@ const FilterButtons = styled.div`
 `;
 
 const FilterButton = styled.button`
-  background-color: ${props => props.active ? '#5c0e0e' : 'transparent'};
-  color: ${props => props.active ? 'white' : '#5c0e0e'};
+  background-color: ${(props) => (props.active ? "#5c0e0e" : "transparent")};
+  color: ${(props) => (props.active ? "white" : "#5c0e0e")};
   border: 1px solid #5c0e0e;
   border-radius: 20px;
   padding: 0.5rem 1rem;
@@ -347,29 +347,22 @@ const FilterButton = styled.button`
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;
-  
-  &:hover {
-    background-color: ${props => props.active ? '#5c0e0e' : 'rgba(92, 14, 14, 0.1)'};
-  }
-`;
 
-const SearchContainer = styled.div`
-  position: relative;
-  width: 250px;
-  
-  @media (max-width: 768px) {
-    width: 100%;
+  &:hover {
+    background-color: ${(props) =>
+      props.active ? "#5c0e0e" : "rgba(92, 14, 14, 0.1)"};
   }
 `;
 
 const SearchInput = styled.input`
-  width: 100%;
+  width: 250px;
   padding: 0.7rem 1rem;
+  margin-right: 1rem;
   border-radius: 20px;
   border: 1px solid #ddd;
   font-size: 0.9rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  
+
   &:focus {
     outline: none;
     border-color: #5c0e0e;
@@ -387,7 +380,7 @@ const ProductsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
   }
@@ -400,12 +393,12 @@ const CardContainer = styled.div`
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   opacity: 0;
-  
+
   &.visible {
     animation: ${fadeIn} 0.8s forwards;
-    animation-delay: ${props => props.animationDelay || 0}s;
+    animation-delay: ${(props) => props.animationDelay || 0}s;
   }
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
@@ -423,7 +416,7 @@ const CardImage = styled.img`
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
-  
+
   ${CardContainer}:hover & {
     transform: scale(1.05);
   }
@@ -433,7 +426,7 @@ const ProductTag = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: ${props => props.outOfStock ? '#e74c3c' : '#5c0e0e'};
+  background-color: ${(props) => (props.outOfStock ? "#e74c3c" : "#5c0e0e")};
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
@@ -459,7 +452,7 @@ const ProductDescription = styled.p`
   font-size: 0.9rem;
   margin-bottom: 1rem;
   line-height: 1.5;
-  
+
   /* Limit to 3 lines of text */
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -509,11 +502,11 @@ const QuantityButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &:hover:not(:disabled) {
     background-color: #7c1a1a;
   }
-  
+
   &:disabled {
     background-color: #ddd;
     cursor: not-allowed;
@@ -538,12 +531,12 @@ const AddButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover:not(:disabled) {
     background-color: #7c1a1a;
     animation: ${pulseAnimation} 1.5s infinite;
   }
-  
+
   &:disabled {
     background-color: #ddd;
     cursor: not-allowed;
@@ -596,7 +589,7 @@ const RetryButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background-color: #7c1a1a;
   }
@@ -607,6 +600,25 @@ const NoResultsMessage = styled.div`
   padding: 3rem;
   color: #666;
   font-size: 1.1rem;
+`;
+
+const GradientOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.7)
+  );
+  pointer-events: none;
+  z-index: 1;
+`;
+
+const Container = styled.div`
+  padding: 0 2rem;
 `;
 
 export default Store;

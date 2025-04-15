@@ -302,7 +302,7 @@ const float = keyframes`
 
 // Styled Components
 const PageContainer = styled.div`
-margin-top: 5rem;
+
   width: 100%;
   background-color: #f8f8f5;
 `;

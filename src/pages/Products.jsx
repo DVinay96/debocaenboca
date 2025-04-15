@@ -1,29 +1,33 @@
-import React, { useState, useRef } from 'react';
-import styled, { keyframes } from 'styled-components';
-import espadinimg from '../assets/images/espadin.jpg';
-import mexicanoimg from '../assets/images/mexicano.jpg';
-import ensambleimg from '../assets/images/ensamble.jpg';
-import plata from '../assets/images/85point.png';
-import oro from '../assets/images/92point.png';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef } from "react";
+import styled, { keyframes } from "styled-components";
+import espadinimg from "../assets/images/espadin.jpg";
+import mexicanoimg from "../assets/images/mexicano.jpg";
+import ensambleimg from "../assets/images/ensamble.jpg";
+import plata from "../assets/images/85point.png";
+import oro from "../assets/images/92point.png";
+import { Link } from "react-router-dom";
+import bg from "../assets/images/mezcales.png";
 
 // You can add these images to your assets folder
 // or replace with your own banner images
-import banner1 from '../assets/images/banner1.jpg'; // Add this image
-import banner2 from '../assets/images/banner2.jpg'; // Add this image
+import banner1 from "../assets/images/banner1.jpg"; // Add this image
+import banner2 from "../assets/images/banner2.jpg"; // Add this image
 
 const useIntersectionObserver = (options = {}) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
   React.useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsVisible(entry.isIntersecting);
-    }, {
-      root: null, 
-      threshold: 0.2,
-      ...options
-    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.2,
+        ...options,
+      }
+    );
 
     const currentRef = ref.current;
     if (currentRef) {
@@ -55,7 +59,7 @@ const mezcales = [
     price: 1390,
     info: "Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
     stamp: oro,
-    award: "Medalla de Oro: 92 puntos"
+    award: "Medalla de Oro: 92 puntos",
   },
   {
     id: 1,
@@ -71,7 +75,7 @@ const mezcales = [
     price: 990,
     info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
     stamp: plata,
-    award: "Medalla de Plata: 85 puntos"
+    award: "Medalla de Plata: 85 puntos",
   },
   {
     id: 2,
@@ -87,7 +91,7 @@ const mezcales = [
     price: 1100,
     info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada",
     stamp: plata,
-    award: "Medalla de Plata: 85 puntos"
+    award: "Medalla de Plata: 85 puntos",
   },
 ];
 
@@ -96,32 +100,29 @@ const banners = [
     id: 1,
     image: banner1,
     title: "Tradición Oaxaqueña",
-    text: "Nuestros mezcales son elaborados con métodos tradicionales que han pasado de generación en generación."
+    text: "Nuestros mezcales son elaborados con métodos tradicionales que han pasado de generación en generación.",
   },
   {
     id: 2,
     image: banner2,
     title: "Agaves Seleccionados",
-    text: "Utilizamos únicamente agaves cultivados de manera sostenible, respetando los ciclos naturales de la planta."
-  }
+    text: "Utilizamos únicamente agaves cultivados de manera sostenible, respetando los ciclos naturales de la planta.",
+  },
 ];
 
 const Products = () => {
   return (
     <PageContainer>
-      <PageTitle>Nuestros Mezcales</PageTitle>
+      <Header>
+        <PageTitle>Nuestros Mezcales</PageTitle>
+      </Header>
       <ProductsContainer>
         {mezcales.map((product, index) => (
           <React.Fragment key={product.id}>
-            <ProductSection 
-              product={product} 
-              isReversed={index % 2 !== 0}
-            />
-            
+            <ProductSection product={product} isReversed={index % 2 !== 0} />
+
             {index < mezcales.length - 1 && (
-              <BannerSection 
-                banner={banners[index % banners.length]} 
-              />
+              <BannerSection banner={banners[index % banners.length]} />
             )}
           </React.Fragment>
         ))}
@@ -132,11 +133,11 @@ const Products = () => {
 
 const ProductSection = ({ product, isReversed }) => {
   const [ref, isVisible] = useIntersectionObserver();
-  
+
   return (
-    <ProductRow 
-      ref={ref} 
-      className={isVisible ? 'visible' : ''}
+    <ProductRow
+      ref={ref}
+      className={isVisible ? "visible" : ""}
       isReversed={isReversed}
     >
       <ProductImageColumn isReversed={isReversed}>
@@ -145,13 +146,15 @@ const ProductSection = ({ product, isReversed }) => {
           <ProductImage src={product.image} alt={product.name} />
         </ProductImageWrapper>
       </ProductImageColumn>
-      
+
       <ProductInfoColumn isReversed={isReversed}>
         <ProductHeader>
           <ProductName>{product.name}</ProductName>
-          <ProductPrice>${product.price} <span>MXN</span></ProductPrice>
+          <ProductPrice>
+            ${product.price} <span>MXN</span>
+          </ProductPrice>
         </ProductHeader>
-        
+
         <SpecsSection>
           <SpecsTitle>Especificaciones</SpecsTitle>
           <SpecsGrid>
@@ -185,12 +188,12 @@ const ProductSection = ({ product, isReversed }) => {
             </SpecItem>
           </SpecsGrid>
         </SpecsSection>
-        
+
         <NotesSection>
           <NotesTitle>Notas de Cata</NotesTitle>
           <NotesText>{product.info}</NotesText>
         </NotesSection>
-        
+
         <PurchaseButton>
           <Link to="/tienda">Comprar ahora</Link>
         </PurchaseButton>
@@ -201,12 +204,9 @@ const ProductSection = ({ product, isReversed }) => {
 
 const BannerSection = ({ banner }) => {
   const [ref, isVisible] = useIntersectionObserver();
-  
+
   return (
-    <BannerContainer
-      ref={ref}
-      className={isVisible ? 'visible' : ''}
-    >
+    <BannerContainer ref={ref} className={isVisible ? "visible" : ""}>
       <BannerImage src={banner.image} alt={banner.title} />
       <BannerOverlay>
         <BannerTitle>{banner.title}</BannerTitle>
@@ -252,28 +252,17 @@ const slideInRight = keyframes`
 
 // Styled Components
 const PageContainer = styled.div`
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 2rem;
 `;
 
 const PageTitle = styled.h1`
   font-size: 2.5rem;
-  color: #5c0e0e;
+  color: #ffff;
   text-align: center;
-  margin-bottom: 4rem;
-  font-weight: 500;
-  margin-top: 6rem;
-  
-  &::after {
-    content: '';
-    display: block;
-    width: 80px;
-    height: 3px;
-    background: #5c0e0e;
-    margin: 1rem auto 0;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   @media (max-width: 768px) {
     font-size: 2rem;
     margin-bottom: 2rem;
@@ -284,22 +273,27 @@ const ProductsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4rem;
+  padding: 1rem 5rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 2rem;
+  }
 `;
 
 const ProductRow = styled.section`
   display: flex;
-  flex-direction: ${props => props.isReversed ? 'row-reverse' : 'row'};
+  flex-direction: ${(props) => (props.isReversed ? "row-reverse" : "row")};
   align-items: center;
   gap: 4rem;
   opacity: 0;
   transform: translateY(30px);
-  
+
   &.visible {
     opacity: 1;
     transform: translateY(0);
     animation: ${fadeIn} 0.8s ease forwards;
   }
-  
+
   @media (max-width: 992px) {
     flex-direction: column;
     gap: 2rem;
@@ -309,12 +303,13 @@ const ProductRow = styled.section`
 const ProductImageColumn = styled.div`
   flex: 1;
   opacity: 0;
-  animation: ${props => props.isReversed ? slideInRight : slideInLeft} 0.8s ease forwards 0.2s;
-  
+  animation: ${(props) => (props.isReversed ? slideInRight : slideInLeft)} 0.8s
+    ease forwards 0.2s;
+
   ${ProductRow}.visible & {
     opacity: 1;
   }
-  
+
   @media (max-width: 992px) {
     width: 100%;
   }
@@ -333,7 +328,7 @@ const ProductImage = styled.img`
   height: auto;
   display: block;
   transition: transform 0.5s ease;
-  
+
   ${ProductImageWrapper}:hover & {
     transform: scale(1.05);
   }
@@ -348,11 +343,11 @@ const MedalImage = styled.img`
   z-index: 10;
   filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
   transform: rotate(-10deg);
-  
+
   @media (max-width: 768px) {
     width: 80px;
   }
-  
+
   @media (max-width: 480px) {
     width: 60px;
   }
@@ -361,8 +356,9 @@ const MedalImage = styled.img`
 const ProductInfoColumn = styled.div`
   flex: 1;
   opacity: 0;
-  animation: ${props => props.isReversed ? slideInLeft : slideInRight} 0.8s ease forwards 0.2s;
-  
+  animation: ${(props) => (props.isReversed ? slideInLeft : slideInRight)} 0.8s
+    ease forwards 0.2s;
+
   ${ProductRow}.visible & {
     opacity: 1;
   }
@@ -376,7 +372,7 @@ const ProductName = styled.h2`
   font-size: 2.2rem;
   color: #5c0e0e;
   margin-bottom: 0.5rem;
-  
+
   @media (max-width: 768px) {
     font-size: 1.8rem;
   }
@@ -386,15 +382,15 @@ const ProductPrice = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
   color: #333;
-  
+
   span {
     font-size: 1.1rem;
     font-weight: 400;
   }
-  
+
   @media (max-width: 768px) {
     font-size: 1.2rem;
-    
+
     span {
       font-size: 0.9rem;
     }
@@ -410,7 +406,7 @@ const SpecsTitle = styled.h3`
   color: #5c0e0e;
   margin-bottom: 1rem;
   font-weight: 600;
-  
+
   @media (max-width: 768px) {
     font-size: 1.1rem;
   }
@@ -420,7 +416,7 @@ const SpecsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.2rem 2rem;
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -457,7 +453,7 @@ const NotesTitle = styled.h3`
   color: #5c0e0e;
   margin-bottom: 0.8rem;
   font-weight: 600;
-  
+
   @media (max-width: 768px) {
     font-size: 1.1rem;
   }
@@ -480,22 +476,22 @@ const PurchaseButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  
+
   &:hover {
     background-color: #7c1a1a;
     transform: translateY(-2px);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
-  
+
   a {
     color: white;
     text-decoration: none;
     display: block;
   }
-  
+
   @media (max-width: 768px) {
     width: 100%;
     padding: 0.9rem 1.5rem;
@@ -511,17 +507,17 @@ const BannerContainer = styled.div`
   margin: 2rem 0;
   opacity: 0;
   transform: translateY(30px);
-  
+
   &.visible {
     opacity: 1;
     transform: translateY(0);
     animation: ${fadeIn} 0.8s ease forwards;
   }
-  
+
   @media (max-width: 768px) {
     height: 250px;
   }
-  
+
   @media (max-width: 480px) {
     height: 200px;
   }
@@ -532,7 +528,7 @@ const BannerImage = styled.img`
   height: 100%;
   object-fit: cover;
   transition: transform 6s ease;
-  
+
   ${BannerContainer}:hover & {
     transform: scale(1.1);
   }
@@ -549,7 +545,7 @@ const BannerOverlay = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 0 4rem;
-  
+
   @media (max-width: 768px) {
     padding: 0 2rem;
   }
@@ -559,11 +555,11 @@ const BannerTitle = styled.h3`
   color: white;
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
-  
+
   @media (max-width: 480px) {
     font-size: 1.5rem;
   }
@@ -573,15 +569,29 @@ const BannerText = styled.p`
   color: white;
   font-size: 1.2rem;
   max-width: 60%;
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
     max-width: 80%;
   }
-  
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-    max-width: 100%;
+`;
+
+const Header = styled.div`
+  background-image: url(${bg});
+  background-size: cover;
+  background-position: center;
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding: 6rem 3rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
   }
 `;
 

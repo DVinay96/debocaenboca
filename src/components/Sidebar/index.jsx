@@ -5,16 +5,18 @@ import logo from "../../assets/images/logo.png";
 import Cart from "../../pages/Cart";
 
 const SideBar = ({ isOpen, setIsOpen, color = "dark" }) => {
+  const isCart = color !== "dark";
+  
   return (
-    <Container color={color} isOpen={isOpen}>
+    <Container color={color} isOpen={isOpen} isCart={isCart}>
       <CloseIcon onClick={() => setIsOpen(false)} color={color} />
       {color === "dark" ? (
         <DarkContainer>
           <Logo src={logo} alt="logo" />
-          <a href="tel:5535061263" class="sc-khdDuB cTxoZG">
+          <a href="tel:5535061263" className="sc-khdDuB cTxoZG">
             Tel: 55 35 06 12 63
           </a>
-          <a href="mailto:info@mezcaldebocaenboca.com" class="sc-khdDuB cTxoZG">
+          <a href="mailto:info@mezcaldebocaenboca.com" className="sc-khdDuB cTxoZG">
             info@mezcaldebocaenboca.com
           </a>
           <p>
@@ -27,9 +29,9 @@ const SideBar = ({ isOpen, setIsOpen, color = "dark" }) => {
           </Footer>
         </DarkContainer>
       ) : (
-        <>
+        <CartWrapper>
           <Cart />
-        </>
+        </CartWrapper>
       )}
     </Container>
   );
@@ -42,21 +44,30 @@ const Container = styled.div`
   top: 0;
   right: 0;
   height: 100vh;
-  width: 25vw;
-  background-color: ${(props) => (props.color === "dark" ? "#000" : "#fff")};
+  width: ${props => props.isCart ? "100vw" : "25vw"};
+  background-color: ${props => props.color === "dark" ? "#000" : "#fff"};
   padding: 2rem;
   box-sizing: border-box;
   z-index: 1;
-  transform: ${(props) =>
-    props.isOpen ? "translateX(0)" : "translateX(100%)"};
+  transform: ${props => props.isOpen ? "translateX(0)" : "translateX(100%)"};
   transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: ${props => props.isCart ? "flex-start" : "center"};
+  overflow-y: ${props => props.isCart ? "auto" : "initial"};
+  
   @media (max-width: 768px) {
-    width: 90vw;
+    width: ${props => props.isCart ? "100vw" : "90vw"};
   }
+`;
+
+const CartWrapper = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 4rem;
 `;
 
 const CloseIcon = styled(IoMdClose)`
@@ -66,11 +77,12 @@ const CloseIcon = styled(IoMdClose)`
   font-size: 2rem;
   color: #fff;
   cursor: pointer;
-  fill: ${(props) => (props.color === "dark" ? "#FFF" : "#000")};
-  stroke: ${(props) => (props.color === "dark" ? "#FFF" : "#000")};
+  fill: ${props => props.color === "dark" ? "#FFF" : "#000"};
+  stroke: ${props => props.color === "dark" ? "#FFF" : "#000"};
+  z-index: 10;
 
   &:hover {
-    color: ${(props) => props.theme.primary};
+    color: ${props => props.theme.primary};
     transition: color 0.3s ease;
   }
 `;

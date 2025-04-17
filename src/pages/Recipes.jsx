@@ -138,17 +138,14 @@ const Recipes = () => {
 
   return (
     <PageContainer>
-      {/* Hero Header */}
       <HeroHeader ref={headerRef} className={headerVisible ? 'visible' : ''}>
         <HeroOverlay />
         <HeroContent>
-          <HeroIcon><GiAgave /></HeroIcon>
           <HeroTitle>Cócteles con Mezcal</HeroTitle>
           <HeroSubtitle>Descubre deliciosas recetas con nuestro mezcal artesanal</HeroSubtitle>
         </HeroContent>
       </HeroHeader>
 
-      {/* Featured Video Section */}
       <VideoSection>
         <SectionTitle>
           <SectionTitleIcon><FaGlassMartini /></SectionTitleIcon>
@@ -353,15 +350,6 @@ const HeroContent = styled.div`
   padding: 0 2rem;
 `;
 
-const HeroIcon = styled.div`
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  animation: ${float} 3s ease-in-out infinite;
-  
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-`;
 
 const HeroTitle = styled.h1`
   font-size: 3.5rem;

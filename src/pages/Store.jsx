@@ -3,6 +3,9 @@ import styled, { keyframes } from "styled-components";
 import shopifyService from "../services/shopify";
 import productImage from "../assets/images/product.png";
 import storeBg from "../assets/images/store_hero.png";
+import { useCart } from "../contexts/CartContext";
+
+
 
 const useIntersectionObserver = (options = {}) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -35,11 +38,11 @@ const useIntersectionObserver = (options = {}) => {
   return [ref, isVisible];
 };
 
-const Store = ({ addToCart }) => {
+const Store = () => {
+  const addToCart = useCart().addToCart
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [productQuantities, setProductQuantities] = useState({});
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -61,25 +64,6 @@ const Store = ({ addToCart }) => {
     fetchProducts();
   }, []);
 
-  const handleQuantityChange = (productId, delta) => {
-    setProductQuantities((prevQuantities) => {
-      const newQuantity = Math.max(0, (prevQuantities[productId] || 0) + delta);
-      return { ...prevQuantities, [productId]: newQuantity };
-    });
-  };
-
-  const handleAddToCart = (product) => {
-    const quantity = productQuantities[product.id] || 0;
-    if (quantity > 0) {
-      addToCart({ ...product, quantity });
-      setProductQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [product.id]: 0, // Reset quantity after adding to cart
-      }));
-    }
-  };
-
-  // Simple implementation - expand with real categories from your products
   const filters = [
     { id: "all", name: "All Products" },
     { id: "espadín", name: "Espadín" },
@@ -120,12 +104,14 @@ const Store = ({ addToCart }) => {
             </FilterButton>
           ))}
         </FilterButtons>
-        <SearchInput
-          type="text"
-          placeholder="Buscar..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        <SearchInputWrapper>
+          <SearchInput
+            type="text"
+            placeholder="Buscar..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </SearchInputWrapper>
       </FiltersContainer>
       <Container>
         {loading ? (
@@ -174,6 +160,7 @@ const Store = ({ addToCart }) => {
 const ProductCard = ({ product, index, addToCart }) => {
   const [ref, isVisible] = useIntersectionObserver();
   const [quantity, setQuantity] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [isHovered, setIsHovered] = useState(false);
 
   const handleQuantityChange = (delta) => {
@@ -314,26 +301,42 @@ const Subtitle = styled.p`
 `;
 
 const FiltersContainer = styled.div`
-  margin-bottom: 2rem;
+  margin: 2rem;
   background: white;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 1.25rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
   align-items: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
 `;
 
 const FilterButtons = styled.div`
   display: flex;
   gap: 0.5rem;
+  flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 0.5rem;
-
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  flex: 1;
+  padding-bottom: 0.25rem;
+  
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
   @media (max-width: 768px) {
     width: 100%;
-    justify-content: flex-start;
+    padding-bottom: 0.5rem;
   }
 `;
 
@@ -347,6 +350,7 @@ const FilterButton = styled.button`
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     background-color: ${(props) =>
@@ -354,14 +358,25 @@ const FilterButton = styled.button`
   }
 `;
 
+const SearchInputWrapper = styled.div`
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 250px;
+  
+  @media (max-width: 768px) {
+    max-width: 100%;
+    width: 100%;
+  }
+`;
+
 const SearchInput = styled.input`
-  width: 250px;
+  width: 100%;
   padding: 0.7rem 1rem;
-  margin-right: 1rem;
   border-radius: 20px;
   border: 1px solid #ddd;
   font-size: 0.9rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -619,6 +634,10 @@ const GradientOverlay = styled.div`
 
 const Container = styled.div`
   padding: 0 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `;
 
 export default Store;

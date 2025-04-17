@@ -12,6 +12,8 @@ import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { ThemeProvider } from "styled-components";
 import { lightTheme } from "./styles/globalStyles";
+import { CartProvider } from "./contexts/CartContext"; 
+
 
 function App() {
   const [cart, setCart] = useState(() => {
@@ -53,9 +55,13 @@ function App() {
   return (
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
+      <CartProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout cart={cart} />}>
+          <Route path="/" element={<Layout 
+          cart={cart}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart} />}>
             <Route path="/" element={<Inicio />} />
             <Route path="/nosotros" element={<About />} />
             <Route path="/mezcales" element={<Products />} />
@@ -81,6 +87,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </CartProvider>
     </ThemeProvider>
   );
 }

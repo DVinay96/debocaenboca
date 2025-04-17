@@ -4,10 +4,14 @@ import styled, { keyframes } from 'styled-components';
 import shopifyService from '../services/shopify';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaTrash, FaArrowLeft, FaShoppingBag, FaSpinner } from 'react-icons/fa';
+import { useCart } from "../contexts/CartContext";
 
-const Cart = ({ cart, removeFromCart }) => {
+
+const Cart = () => {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [checkoutError, setCheckoutError] = useState(null);
+  const [checkoutError, setCheckoutError] = useState(null);  
+  const { cart, removeFromCart } = useCart();
+
 
   const handleCheckout = async () => {
     try {
@@ -161,7 +165,6 @@ const Cart = ({ cart, removeFromCart }) => {
           <EmptyCartMessage>
             Parece que aún no has agregado productos a tu carrito.
           </EmptyCartMessage>
-          <ShopButton to="/tienda">Ir a la Tienda</ShopButton>
         </EmptyCartContainer>
       )}
     </CartPageContainer>
@@ -181,6 +184,7 @@ Cart.propTypes = {
     })
   ).isRequired,
   removeFromCart: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired
 };
 
 // Animations
@@ -206,14 +210,6 @@ const slideIn = keyframes`
   }
 `;
 
-const pulse = keyframes`
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-`;
 
 const spin = keyframes`
   to {
@@ -228,6 +224,8 @@ const CartPageContainer = styled.div`
   padding: 3rem 2rem;
   animation: ${fadeIn} 0.5s ease;
   min-height: 70vh;
+  height: 100%;
+  overflow-y: auto;
   
   @media (max-width: 768px) {
     padding: 2rem 1rem;
@@ -267,12 +265,12 @@ const CartSummary = styled.p`
 `;
 
 const CartContent = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2rem;
-  
-  @media (max-width: 992px) {
-    grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 992px) {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
   }
 `;
 
@@ -559,23 +557,5 @@ const EmptyCartMessage = styled.p`
   max-width: 500px;
 `;
 
-const ShopButton = styled(Link)`
-  background-color: #5c0e0e;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  animation: ${pulse} 2s infinite;
-  
-  &:hover {
-    background-color: #7c1a1a;
-    transform: translateY(-2px);
-  }
-`;
 
 export default Cart;

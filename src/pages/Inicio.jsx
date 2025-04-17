@@ -87,7 +87,7 @@ const Homepage = () => {
         <GradientOverlay />
         <UpperContain>
           <TopTitle>Timeless flavor</TopTitle>
-          <Title size="XL">special release</Title>
+          <Title size="XL">No lo bebas... Bésalo</Title>
           <Link to="mezcales">
             <Button icon inverted>
               Explorar

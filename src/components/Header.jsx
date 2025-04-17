@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/images/logo.png";
+import logoblanco from "../assets/images/logoblanco.png";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { RiMenu5Fill } from "react-icons/ri";
+import { useCart } from "../contexts/CartContext";
 
-const Header = ({ cart }) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSidebarCar, setIsOpenSidebarCar] = useState(false);
   const [isOpenSidebarContact, setIsOpenSidebarContact] = useState(false);
+  const { cart } = useCart();
+
 
   return (
     <HeaderContainer>
@@ -25,7 +29,7 @@ const Header = ({ cart }) => {
       />
       <StyledLogo>
         <Link to="/">
-          <img src={logo} alt="logo" />
+          <img src={logoblanco} alt="logo" />
         </Link>
       </StyledLogo>
       <Nav>
@@ -170,11 +174,18 @@ const StyledList = styled.ul`
 `;
 
 const StyledLogo = styled.div`
-  height: 100px;
+  margin-top: 2rem;
+  height: 85px;
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  
+  img {
+    height: 85px;
+    width: auto;
+    object-fit: contain;
+  }
 
   @media (max-width: 768px) {
     display: none;
@@ -296,9 +307,11 @@ const StyledLogoMobile = styled.div`
 
   @media (max-width: 768px) {
     display: block;
-    & img {
+    
+    img {
       height: 50px;
       width: auto;
+      object-fit: contain;
       margin: 0 auto;
       display: block;
     }

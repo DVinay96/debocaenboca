@@ -48,10 +48,6 @@ const Buttle = () => {
         <Texts>
           <TopTitle>Receta Original</TopTitle>
           <Subtitle size="XL">Mezcal Refinado</Subtitle>
-          <p>
-            Lorem ipsum dolor sit amet, a mea epicuri vituperator bus ea,
-            <br /> ea nam movet complectitur
-          </p>
         </Texts>
         <Bg>
           <ImgContainer>

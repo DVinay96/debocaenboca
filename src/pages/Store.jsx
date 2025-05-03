@@ -68,7 +68,7 @@ const Store = () => {
     { id: "all", name: "All Products" },
     { id: "espadín", name: "Espadín" },
     { id: "ensamble", name: "Ensamble" },
-    { id: "tobalá", name: "Tobalá" },
+    { id: "Méxicano", name: "Méxicano" },
   ];
 
   const filteredProducts = products.filter((product) => {
@@ -266,7 +266,8 @@ const pulseAnimation = keyframes`
 `;
 
 // Styled Components
-const PageContainer = styled.div``;
+const PageContainer = styled.div`
+margin-bottom: 2rem`;
 
 const StoreHeader = styled.header`
   background-image: url(${storeBg});

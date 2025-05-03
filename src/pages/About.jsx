@@ -174,7 +174,7 @@ const About = () => {
           </StoryParagraph>
           
           <StoryParagraph>
-            Acompáñanos en este viaje y experimenta el auténtico sabor de México en cada sorbo de nuestro mezcal. Ya sea que sea un aficionado desde hace mucho tiempo o sea nuevo en este exquisito licor, lo invitamos a explorar y disfrutar los distintos sabores que distinguen a nuestro mezcal.
+            Acompáñanos en este viaje y experimenta el auténtico sabor de México en cada sorbo de nuestro mezcal. Ya sea que sea un aficionado desde hace mucho tiempo o sea nuevo en este exquisito destilado, lo invitamos a explorar y disfrutar los distintos sabores que distinguen a nuestro mezcal.
           </StoryParagraph>
         </StoryContent>
       </StorySection>

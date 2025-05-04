@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import aboutImage from '../assets/images/aboutHeader.jpg';
 import { FaStar, FaStarHalfAlt, FaQuoteLeft, FaQuoteRight, FaGlassWhiskey } from 'react-icons/fa';
 import { GiAgave } from 'react-icons/gi';
+import MezcalStory from '../components/Story';
 
 const useIntersectionObserver = (options = {}) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -142,7 +143,6 @@ const About = () => {
 
   return (
     <PageContainer>
-      {/* Hero Section */}
       <HeroSection ref={heroRef} className={heroVisible ? 'visible' : ''}>
         <HeroImageWrapper>
           <HeroImage src={aboutImage} alt="De Boca en Boca Mezcal" />
@@ -156,7 +156,6 @@ const About = () => {
         </HeroImageWrapper>
       </HeroSection>
 
-      {/* Our Story Section */}
       <StorySection ref={storyRef} className={storyVisible ? 'visible' : ''}>
         <SectionTitleWrapper>
           <SectionIcon><GiAgave /></SectionIcon>
@@ -175,11 +174,11 @@ const About = () => {
           
           <StoryParagraph>
             Acompáñanos en este viaje y experimenta el auténtico sabor de México en cada sorbo de nuestro mezcal. Ya sea que sea un aficionado desde hace mucho tiempo o sea nuevo en este exquisito destilado, lo invitamos a explorar y disfrutar los distintos sabores que distinguen a nuestro mezcal.
-          </StoryParagraph>
+          </StoryParagraph>        
         </StoryContent>
       </StorySection>
+      
 
-      {/* Our Values Section */}
       <ValuesSection ref={valuesRef} className={valuesVisible ? 'visible' : ''}>
         <SectionTitleWrapper>
           <SectionIcon style={{ transform: 'rotate(45deg)' }}><GiAgave /></SectionIcon>
@@ -196,6 +195,8 @@ const About = () => {
             </ValueCard>
           ))}
         </ValuesGrid>
+        <MezcalStory/>
+
       </ValuesSection>
 
       {/* Reviews Section */}
@@ -255,28 +256,6 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-`;
-
-const fadeInLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const fadeInRight = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 `;
 
@@ -449,7 +428,6 @@ const StoryHighlight = styled.span`
   font-weight: 600;
 `;
 
-// Values Section
 const ValuesSection = styled.section`
   padding: 6rem 2rem;
   background-color: #f2efe8;

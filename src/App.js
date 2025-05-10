@@ -8,6 +8,7 @@ import Layout from "./components/Layout";
 import GlobalStyle from "./styles/globalStyles";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
+import Facturacion from "./pages/Facturacion";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { ThemeProvider } from "styled-components";
@@ -67,6 +68,7 @@ function App() {
             <Route path="/mezcales" element={<Products />} />
             <Route path="/recetas" element={<Recipes />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/facturacion" element={<Facturacion />} />
             <Route path="/politicadeprivacidad" element={<PrivacyPolicy />} />
             <Route
               path="/tienda"

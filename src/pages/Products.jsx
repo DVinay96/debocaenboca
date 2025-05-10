@@ -8,10 +8,8 @@ import oro from "../assets/images/92point.png";
 import { Link } from "react-router-dom";
 import bg from "../assets/images/mezcales.png";
 
-// You can add these images to your assets folder
-// or replace with your own banner images
-import banner1 from "../assets/images/banner1.jpg"; // Add this image
-import banner2 from "../assets/images/banner2.jpg"; // Add this image
+import banner1 from "../assets/images/banner1.jpg";
+import banner2 from "../assets/images/banner2.jpg"; 
 
 const useIntersectionObserver = (options = {}) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -79,7 +77,7 @@ const mezcales = [
   },
   {
     id: 2,
-    name: "MÉXICANO",
+    name: "MEXICANO",
     clase: "Joven",
     cultivo: "Silvestre",
     agave: "Agave Rhodacantha",

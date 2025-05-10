@@ -108,14 +108,10 @@ const Cart = () => {
               <SummaryTitle>Resumen del Pedido</SummaryTitle>
               
               <SummaryRow>
-                <SummaryLabel>Subtotal</SummaryLabel>
+                <SummaryLabel>Productos</SummaryLabel>
                 <SummaryValue>${subtotal.toFixed(2)}</SummaryValue>
               </SummaryRow>
               
-              <SummaryRow>
-                <SummaryLabel>Envío (estimado)</SummaryLabel>
-                <SummaryValue>${shipping.toFixed(2)}</SummaryValue>
-              </SummaryRow>
               
               <SummaryRow>
                 <SummaryLabel>Impuestos (16% IVA)</SummaryLabel>
@@ -125,7 +121,7 @@ const Cart = () => {
               <SummaryDivider />
               
               <TotalRow>
-                <TotalLabel>Total</TotalLabel>
+                <TotalLabel>Subtotal</TotalLabel>
                 <TotalValue>${total.toFixed(2)} MXN</TotalValue>
               </TotalRow>
               

@@ -2,21 +2,22 @@ import React, { useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import bg from "../assets/images/mezcales.png";
+import emailjs from '@emailjs/browser';
 
 const Facturacion = () => {
   const [formData, setFormData] = useState({
+    numeroOrden: "",
     rfc: "",
     nombre: "",
     domicilio: "",
     codigoPostal: "",
     usoComprobante: "",
-    constanciaFiscal: null,
   });
 
   const [errors, setErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef(null);
+  const formRef = useRef(null);
 
   const usosComprobante = [
     { value: "G01", label: "G01 - Adquisición de mercancías" },
@@ -27,6 +28,10 @@ const Facturacion = () => {
 
   const validateForm = () => {
     const newErrors = {};
+    
+    if (!formData.numeroOrden.trim()) {
+      newErrors.numeroOrden = "El número de orden es obligatorio";
+    }
     
     if (!formData.rfc.trim()) {
       newErrors.rfc = "El RFC es obligatorio";
@@ -52,10 +57,6 @@ const Facturacion = () => {
       newErrors.usoComprobante = "Debe seleccionar un uso de comprobante";
     }
     
-    if (!formData.constanciaFiscal) {
-      newErrors.constanciaFiscal = "Debe agregar su constancia fiscal";
-    }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -67,37 +68,11 @@ const Facturacion = () => {
       [name]: value,
     });
     
-    // Clear error when user types
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: null,
       });
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.type === "application/pdf" || file.type.startsWith("image/")) {
-        setFormData({
-          ...formData,
-          constanciaFiscal: file,
-        });
-        
-        if (errors.constanciaFiscal) {
-          setErrors({
-            ...errors,
-            constanciaFiscal: null,
-          });
-        }
-      } else {
-        setErrors({
-          ...errors,
-          constanciaFiscal: "El archivo debe ser PDF o imagen",
-        });
-        e.target.value = null;
-      }
     }
   };
 
@@ -109,33 +84,38 @@ const Facturacion = () => {
     setIsLoading(true);
     
     try {
-      // This is where you would implement your email sending logic
-      // For example with EmailJS, Nodemailer on your backend, or similar service
+      const response = await emailjs.sendForm(
+        'service_5t32vns', // Replace with your actual service ID
+        'template_vke7tgd', // Replace with your actual template ID
+        formRef.current, // This sends all the form fields as they are named in the form
+        {
+          publicKey: 'yALfnzOtdg45AlP5V', // Replace with your actual public key
+        }
+      );
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log("EmailJS Response:", response);
       
-      // Success message
-      setSubmitStatus({
-        success: true,
-        message: "¡Información fiscal enviada correctamente! Nos pondremos en contacto pronto.",
-      });
-      
-      // Reset form
-      setFormData({
-        rfc: "",
-        nombre: "",
-        domicilio: "",
-        codigoPostal: "",
-        usoComprobante: "",
-        constanciaFiscal: null,
-      });
-      
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
+      if (response.status === 200) {
+        // Success message
+        setSubmitStatus({
+          success: true,
+          message: "¡Información fiscal enviada correctamente! Recuerde enviar su constancia de situación fiscal a ctorres@gccinternational.mx para completar el proceso.",
+        });
+        
+        // Reset form
+        setFormData({
+          numeroOrden: "",
+          rfc: "",
+          nombre: "",
+          domicilio: "",
+          codigoPostal: "",
+          usoComprobante: "",
+        });
+      } else {
+        throw new Error(`Error al enviar el correo: Status ${response.status}`);
       }
-      
     } catch (error) {
+      console.error("EmailJS Error Details:", error);
       setSubmitStatus({
         success: false,
         message: "Ha ocurrido un error al enviar la información. Por favor, inténtelo de nuevo.",
@@ -143,10 +123,10 @@ const Facturacion = () => {
     } finally {
       setIsLoading(false);
       
-      // Clear status after 5 seconds
+      // Clear status after 7 seconds
       setTimeout(() => {
         setSubmitStatus(null);
-      }, 5000);
+      }, 7000);
     }
   };
 
@@ -162,18 +142,41 @@ const Facturacion = () => {
           Todos los campos son obligatorios.
         </FormDescription>
         
+        <ImportantNotice>
+          <NoticeIcon>ℹ️</NoticeIcon>
+          <NoticeText>
+            <strong>Importante:</strong> Para completar su solicitud de facturación, deberá enviar su Constancia de Situación Fiscal por correo electrónico a:{' '}
+            <EmailLink href="mailto:ctorres@gccinternational.mx">ctorres@gccinternational.mx</EmailLink>
+            <br/>
+            Incluya su número de orden en el asunto del correo.
+          </NoticeText>
+        </ImportantNotice>
+        
         {submitStatus && (
           <StatusMessage success={submitStatus.success}>
             {submitStatus.message}
           </StatusMessage>
         )}
         
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} ref={formRef}>
+          <FormGroup>
+            <FormLabel>Número de Orden</FormLabel>
+            <FormInput
+              type="text"
+              name="numeroOrden" // The name must match the template variable
+              value={formData.numeroOrden}
+              onChange={handleChange}
+              placeholder="Ej. ORD-12345"
+              hasError={errors.numeroOrden}
+            />
+            {errors.numeroOrden && <ErrorMessage>{errors.numeroOrden}</ErrorMessage>}
+          </FormGroup>
+
           <FormGroup>
             <FormLabel>RFC</FormLabel>
             <FormInput
               type="text"
-              name="rfc"
+              name="rfc" // The name must match the template variable
               value={formData.rfc}
               onChange={handleChange}
               placeholder="Ej. XAXX010101000"
@@ -186,7 +189,7 @@ const Facturacion = () => {
             <FormLabel>Nombre o Razón Social</FormLabel>
             <FormInput
               type="text"
-              name="nombre"
+              name="nombre" // The name must match the template variable
               value={formData.nombre}
               onChange={handleChange}
               placeholder="Nombre completo o razón social"
@@ -198,7 +201,7 @@ const Facturacion = () => {
           <FormGroup>
             <FormLabel>Domicilio Fiscal</FormLabel>
             <FormTextarea
-              name="domicilio"
+              name="domicilio" // The name must match the template variable
               value={formData.domicilio}
               onChange={handleChange}
               placeholder="Dirección completa de su domicilio fiscal"
@@ -212,7 +215,7 @@ const Facturacion = () => {
               <FormLabel>Código Postal</FormLabel>
               <FormInput
                 type="text"
-                name="codigoPostal"
+                name="codigoPostal" // The name must match the template variable
                 value={formData.codigoPostal}
                 onChange={handleChange}
                 placeholder="Ej. 72000"
@@ -225,7 +228,7 @@ const Facturacion = () => {
             <FormGroup>
               <FormLabel>Uso del Comprobante</FormLabel>
               <FormSelect
-                name="usoComprobante"
+                name="usoComprobante" // The name must match the template variable
                 value={formData.usoComprobante}
                 onChange={handleChange}
                 hasError={errors.usoComprobante}
@@ -241,26 +244,12 @@ const Facturacion = () => {
             </FormGroup>
           </FormRow>
           
-          <FormGroup>
-            <FormLabel>Constancia Fiscal (PDF o imagen)</FormLabel>
-            <FileInputContainer>
-              <FileInputLabel hasError={errors.constanciaFiscal}>
-                {formData.constanciaFiscal
-                  ? `Archivo seleccionado: ${formData.constanciaFiscal.name}`
-                  : "Seleccionar archivo"}
-                <FileInput
-                  type="file"
-                  accept=".pdf,image/*"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                />
-              </FileInputLabel>
-            </FileInputContainer>
-            {errors.constanciaFiscal && <ErrorMessage>{errors.constanciaFiscal}</ErrorMessage>}
-            <FileHelp>
-              Adjunte su constancia de situación fiscal actualizada (PDF) o una imagen de la misma.
-            </FileHelp>
-          </FormGroup>
+          {/* Hidden field to send the uso comprobante label */}
+          <input 
+            type="hidden" 
+            name="usoComprobanteLabel" 
+            value={usosComprobante.find(uso => uso.value === formData.usoComprobante)?.label || ""}
+          />
           
           <ButtonGroup>
             <SubmitButton type="submit" disabled={isLoading}>
@@ -338,6 +327,43 @@ const FormContainer = styled.div`
   @media (max-width: 992px) {
     margin: 2rem 2rem 4rem;
     padding: 1.5rem;
+  }
+`;
+
+const ImportantNotice = styled.div`
+  display: flex;
+  align-items: flex-start;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 2rem;
+  background-color: #f0f7ff;
+  border: 1px solid #c5dbff;
+  border-radius: 8px;
+  border-left: 4px solid #3676e8;
+`;
+
+const NoticeIcon = styled.div`
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  line-height: 1;
+`;
+
+const NoticeText = styled.div`
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #333;
+  
+  strong {
+    color: #1d4ed8;
+  }
+`;
+
+const EmailLink = styled.a`
+  color: #5c0e0e;
+  font-weight: 500;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
@@ -435,46 +461,6 @@ const FormSelect = styled.select`
     border-color: ${props => props.hasError ? "#d83b3b" : "#5c0e0e"};
     box-shadow: 0 0 0 2px ${props => props.hasError ? "rgba(216, 59, 59, 0.2)" : "rgba(92, 14, 14, 0.2)"};
   }
-`;
-
-const FileInputContainer = styled.div`
-  width: 100%;
-`;
-
-const FileInputLabel = styled.label`
-  display: block;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  color: #555;
-  background-color: #f8f8f5;
-  border: 1px solid ${props => props.hasError ? "#d83b3b" : "#ddd"};
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-
-  &:hover {
-    background-color: #f0f0eb;
-  }
-`;
-
-const FileInput = styled.input`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-`;
-
-const FileHelp = styled.div`
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 0.5rem;
 `;
 
 const ErrorMessage = styled.div`

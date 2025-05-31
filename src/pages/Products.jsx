@@ -55,6 +55,7 @@ const mezcales = [
     molienda: "Tahoma de piedra jalada por un caballo",
     image: ensambleimg,
     price: 1390,
+    compareAtPrice: 1640,
     info: "Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
     stamp: oro,
     award: "Medalla de Oro: 92 puntos",
@@ -71,6 +72,7 @@ const mezcales = [
     molienda: "Tahoma de piedra jalada por un caballo",
     image: espadinimg,
     price: 990,
+    compareAtPrice: 1100,
     info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
     stamp: plata,
     award: "Medalla de Plata: 85 puntos",
@@ -87,6 +89,7 @@ const mezcales = [
     molienda: "Tahoma de piedra jalada por un caballo",
     image: mexicanoimg,
     price: 1100,
+    compareAtPrice: 1280,
     info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada",
     stamp: plata,
     award: "Medalla de Plata: 85 puntos",
@@ -151,6 +154,9 @@ const ProductSection = ({ product, isReversed }) => {
           <ProductPrice>
             ${product.price} <span>MXN</span>
           </ProductPrice>
+          <ComparePrice>
+          ${product.compareAtPrice} <span>MXN</span>
+          </ComparePrice>
         </ProductHeader>
 
         <SpecsSection>
@@ -393,6 +399,13 @@ const ProductPrice = styled.div`
       font-size: 0.9rem;
     }
   }
+`;
+
+const ComparePrice = styled.span`
+  text-decoration: line-through;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
 `;
 
 const SpecsSection = styled.div`

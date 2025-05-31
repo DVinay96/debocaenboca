@@ -18,7 +18,6 @@ const shopifyClient = axios.create({
     }
 })
 
-// Helper function to retry an operation multiple times
 const retry = async (operation, maxRetries = 3, delay = 500) => {
     let lastError;
     
@@ -30,13 +29,11 @@ const retry = async (operation, maxRetries = 3, delay = 500) => {
             lastError = error;
             
             if (attempt < maxRetries) {
-                // Wait before the next retry
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
     }
     
-    // If we got here, all retries failed
     throw lastError;
 };
 
@@ -57,6 +54,10 @@ const shopifyService = {
                                             node {
                                                 id  # This is important for checkout
                                                 price {
+                                                    amount
+                                                    currencyCode
+                                                }
+                                                compareAtPrice {
                                                     amount
                                                     currencyCode
                                                 }
@@ -84,8 +85,9 @@ const shopifyService = {
                 id: node.id,
                 title: node.title,
                 description: node.description,
-                variants: node.variants,  // Include the full variants object
+                variants: node.variants, 
                 price: node.variants.edges[0]?.node.price,
+                compareAtPrice: node.variants.edges[0]?.node.compareAtPrice,
                 image: node.images.edges[0]?.node,
                 availableForSale: node.variants.edges[0]?.node.availableForSale
             }));
@@ -109,6 +111,10 @@ const shopifyService = {
                                     node {
                                         id
                                         price {
+                                            amount
+                                            currencyCode
+                                        }
+                                        compareAtPrice {
                                             amount
                                             currencyCode
                                         }
@@ -136,6 +142,7 @@ const shopifyService = {
                 title: product.title,
                 description: product.description,
                 price: product.variants.edges[0]?.node.price,
+                compareAtPrice: product.variants.edges[0]?.node.compareAtPrice,
                 image: product.images.edges[0]?.node,
                 availableForSale: product.variants.edges[0]?.node.availableForSale
             };
@@ -188,21 +195,18 @@ const shopifyService = {
 
                 const response = await shopifyClient.post('/graphql.json', query);
                 
-                // Safely check if we have a valid response before accessing properties
                 if (!response.data || !response.data.data || !response.data.data.checkoutCreate) {
                     throw new Error('Invalid checkout response from Shopify API');
                 }
                 
                 const checkoutCreate = response.data.data.checkoutCreate;
                 
-                // Check for user errors if the property exists
                 if (checkoutCreate.checkoutUserErrors && 
                     Array.isArray(checkoutCreate.checkoutUserErrors) && 
                     checkoutCreate.checkoutUserErrors.length > 0) {
                     throw new Error(checkoutCreate.checkoutUserErrors[0].message);
                 }
                 
-                // Verify we have a checkout with a webUrl
                 if (!checkoutCreate.checkout || !checkoutCreate.checkout.webUrl) {
                     throw new Error('No checkout URL provided');
                 }
@@ -212,7 +216,7 @@ const shopifyService = {
                 console.error('Error creating checkout:', error);
                 throw error;
             }
-        }, 5, 800); // Retry up to 3 times with 800ms delay between attempts
+        }, 5, 800);
     }
 }
 

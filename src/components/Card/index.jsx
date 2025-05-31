@@ -23,7 +23,13 @@ const Card = ({ product }) => {
         <Image src={botellaDemo} alt={product.title} />
       </ImagenContainer>
       <p>Precio</p>
-      <Price>${product.price.amount}</Price>
+      <Price>${product.price.amount} </Price>
+      { product.compareAtPrice?.amount ? 
+      (<ComparePrice>
+          ${product?.compareAtPrice?.amount}
+      </ComparePrice> 
+      ) : null}
+      
       <Link to="/tienda">
         <Button icon inverted>
           Ver más
@@ -67,4 +73,10 @@ const Price = styled.p`
   font-size: 1.5rem;
   color: #333;
   font-weight: bold;
+`;
+const ComparePrice = styled.span`
+  text-decoration: line-through;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
 `;

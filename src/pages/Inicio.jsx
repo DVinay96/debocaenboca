@@ -96,6 +96,7 @@ const Homepage = () => {
               Explorar
             </Button>
           </Link>
+          <ButtomTittleText>Porque los secretos siempre van DE BOCA EN BOCA...todos quieren saberlo pero no todos pueden tenerlo...</ButtomTittleText>
         </UpperContain>
       </UpperContent>
 
@@ -276,3 +277,8 @@ const Hero2 = styled.div`
     object-position: center;
   }
 `;
+
+const ButtomTittleText = styled.div`
+margin-top: 3rem;
+font-size: 1.5rem
+`

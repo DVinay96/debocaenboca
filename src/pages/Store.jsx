@@ -170,7 +170,7 @@ const ProductCard = ({ product, index, addToCart }) => {
   const handleAddToCart = () => {
     if (quantity > 0) {
       addToCart({ ...product, quantity });
-      setQuantity(0); // Reset quantity after adding to cart
+      setQuantity(0); 
     }
   };
 
@@ -204,6 +204,9 @@ const ProductCard = ({ product, index, addToCart }) => {
           <ProductPrice>
             ${product.price?.amount} {product.price?.currencyCode || "MXN"}
           </ProductPrice>
+          <ComparePrice>
+          ${product.compareAtPrice?.amount}
+          </ComparePrice>
         </PriceRow>
 
         <CardActions>
@@ -326,13 +329,13 @@ const FilterButtons = styled.div`
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
   flex: 1;
   padding-bottom: 0.25rem;
   
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
   }
   
   @media (max-width: 768px) {
@@ -486,6 +489,13 @@ const PriceRow = styled.div`
 `;
 
 const ProductPrice = styled.div`
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #5c0e0e;
+`;
+
+const ComparePrice = styled.span`
+  text-decoration: line-through;
   font-size: 1.3rem;
   font-weight: 700;
   color: #5c0e0e;

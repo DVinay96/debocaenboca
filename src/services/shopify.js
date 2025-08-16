@@ -3,7 +3,7 @@ import axios from "axios";
 const shopifyConfig = {
     shopName: process.env.REACT_APP_SHOPIFY_STORE_NAME,
     storefrontToken: process.env.REACT_APP_SHOPIFY_STOREFRONT_TOKEN,
-    apiVersion: '2024-01'
+    apiVersion: '2024-07' // Updated to a newer version that supports Cart API
 }
 
 if (!shopifyConfig.shopName || !shopifyConfig.storefrontToken) {
@@ -52,7 +52,7 @@ const shopifyService = {
                                     variants(first: 1) {
                                         edges {
                                             node {
-                                                id  # This is important for checkout
+                                                id  # This is important for cart
                                                 price {
                                                     amount
                                                     currencyCode
@@ -152,35 +152,51 @@ const shopifyService = {
         }
     },
 
-    createCheckout: async (cart) => {
-        // Use the retry helper to attempt checkout multiple times
+    // NEW: Create a cart (replaces createCheckout)
+    createCart: async (cart) => {
         return retry(async () => {
             try {
-                const lineItems = cart.map(item => ({
-                    variantId: item.variants.edges[0]?.node.id,
+                const lines = cart.map(item => ({
+                    merchandiseId: item.variants.edges[0]?.node.id,
                     quantity: item.quantity
                 }));
 
                 const query = {
                     query: `
-                        mutation createCheckout($lineItems: [CheckoutLineItemInput!]!) {
-                            checkoutCreate(input: {
-                                lineItems: $lineItems
-                            }) {
-                                checkout {
+                        mutation cartCreate($cartInput: CartInput!) {
+                            cartCreate(input: $cartInput) {
+                                cart {
                                     id
-                                    webUrl
-                                    lineItems(first: 250) {
+                                    checkoutUrl
+                                    lines(first: 250) {
                                         edges {
                                             node {
                                                 id
-                                                title
                                                 quantity
+                                                merchandise {
+                                                    ... on ProductVariant {
+                                                        id
+                                                        title
+                                                        product {
+                                                            title
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
+                                    cost {
+                                        totalAmount {
+                                            amount
+                                            currencyCode
+                                        }
+                                        subtotalAmount {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
                                 }
-                                checkoutUserErrors {
+                                userErrors {
                                     code
                                     field
                                     message
@@ -189,34 +205,300 @@ const shopifyService = {
                         }
                     `,
                     variables: {
-                        lineItems: lineItems
+                        cartInput: {
+                            lines: lines
+                        }
                     }
                 };
 
                 const response = await shopifyClient.post('/graphql.json', query);
                 
-                if (!response.data || !response.data.data || !response.data.data.checkoutCreate) {
-                    throw new Error('Invalid checkout response from Shopify API');
+                if (!response.data || !response.data.data || !response.data.data.cartCreate) {
+                    throw new Error('Invalid cart response from Shopify API');
                 }
                 
-                const checkoutCreate = response.data.data.checkoutCreate;
+                const cartCreate = response.data.data.cartCreate;
                 
-                if (checkoutCreate.checkoutUserErrors && 
-                    Array.isArray(checkoutCreate.checkoutUserErrors) && 
-                    checkoutCreate.checkoutUserErrors.length > 0) {
-                    throw new Error(checkoutCreate.checkoutUserErrors[0].message);
+                if (cartCreate.userErrors && 
+                    Array.isArray(cartCreate.userErrors) && 
+                    cartCreate.userErrors.length > 0) {
+                    throw new Error(cartCreate.userErrors[0].message);
                 }
                 
-                if (!checkoutCreate.checkout || !checkoutCreate.checkout.webUrl) {
+                if (!cartCreate.cart || !cartCreate.cart.checkoutUrl) {
                     throw new Error('No checkout URL provided');
                 }
 
-                return checkoutCreate.checkout.webUrl;
+                return {
+                    cartId: cartCreate.cart.id,
+                    checkoutUrl: cartCreate.cart.checkoutUrl,
+                    cart: cartCreate.cart
+                };
             } catch (error) {
-                console.error('Error creating checkout:', error);
+                console.error('Error creating cart:', error);
                 throw error;
             }
         }, 5, 800);
+    },
+
+    // NEW: Add items to existing cart
+    addToCart: async (cartId, items) => {
+        return retry(async () => {
+            try {
+                const lines = items.map(item => ({
+                    merchandiseId: item.variants.edges[0]?.node.id,
+                    quantity: item.quantity
+                }));
+
+                const query = {
+                    query: `
+                        mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+                            cartLinesAdd(cartId: $cartId, lines: $lines) {
+                                cart {
+                                    id
+                                    checkoutUrl
+                                    lines(first: 250) {
+                                        edges {
+                                            node {
+                                                id
+                                                quantity
+                                                merchandise {
+                                                    ... on ProductVariant {
+                                                        id
+                                                        title
+                                                        product {
+                                                            title
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    cost {
+                                        totalAmount {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                }
+                                userErrors {
+                                    code
+                                    field
+                                    message
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        cartId: cartId,
+                        lines: lines
+                    }
+                };
+
+                const response = await shopifyClient.post('/graphql.json', query);
+                const cartLinesAdd = response.data.data.cartLinesAdd;
+                
+                if (cartLinesAdd.userErrors && cartLinesAdd.userErrors.length > 0) {
+                    throw new Error(cartLinesAdd.userErrors[0].message);
+                }
+
+                return cartLinesAdd.cart;
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                throw error;
+            }
+        }, 5, 800);
+    },
+
+    // NEW: Update cart line quantities
+    updateCartLines: async (cartId, lines) => {
+        return retry(async () => {
+            try {
+                const query = {
+                    query: `
+                        mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+                            cartLinesUpdate(cartId: $cartId, lines: $lines) {
+                                cart {
+                                    id
+                                    checkoutUrl
+                                    lines(first: 250) {
+                                        edges {
+                                            node {
+                                                id
+                                                quantity
+                                                merchandise {
+                                                    ... on ProductVariant {
+                                                        id
+                                                        title
+                                                        product {
+                                                            title
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    cost {
+                                        totalAmount {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                }
+                                userErrors {
+                                    code
+                                    field
+                                    message
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        cartId: cartId,
+                        lines: lines
+                    }
+                };
+
+                const response = await shopifyClient.post('/graphql.json', query);
+                const cartLinesUpdate = response.data.data.cartLinesUpdate;
+                
+                if (cartLinesUpdate.userErrors && cartLinesUpdate.userErrors.length > 0) {
+                    throw new Error(cartLinesUpdate.userErrors[0].message);
+                }
+
+                return cartLinesUpdate.cart;
+            } catch (error) {
+                console.error('Error updating cart lines:', error);
+                throw error;
+            }
+        }, 5, 800);
+    },
+
+    // NEW: Remove items from cart
+    removeFromCart: async (cartId, lineIds) => {
+        return retry(async () => {
+            try {
+                const query = {
+                    query: `
+                        mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+                            cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+                                cart {
+                                    id
+                                    checkoutUrl
+                                    lines(first: 250) {
+                                        edges {
+                                            node {
+                                                id
+                                                quantity
+                                                merchandise {
+                                                    ... on ProductVariant {
+                                                        id
+                                                        title
+                                                        product {
+                                                            title
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    cost {
+                                        totalAmount {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                }
+                                userErrors {
+                                    code
+                                    field
+                                    message
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        cartId: cartId,
+                        lineIds: lineIds
+                    }
+                };
+
+                const response = await shopifyClient.post('/graphql.json', query);
+                const cartLinesRemove = response.data.data.cartLinesRemove;
+                
+                if (cartLinesRemove.userErrors && cartLinesRemove.userErrors.length > 0) {
+                    throw new Error(cartLinesRemove.userErrors[0].message);
+                }
+
+                return cartLinesRemove.cart;
+            } catch (error) {
+                console.error('Error removing from cart:', error);
+                throw error;
+            }
+        }, 5, 800);
+    },
+
+    // NEW: Get cart details
+    getCart: async (cartId) => {
+        try {
+            const query = {
+                query: `
+                    query cart($cartId: ID!) {
+                        cart(id: $cartId) {
+                            id
+                            checkoutUrl
+                            lines(first: 250) {
+                                edges {
+                                    node {
+                                        id
+                                        quantity
+                                        merchandise {
+                                            ... on ProductVariant {
+                                                id
+                                                title
+                                                product {
+                                                    title
+                                                }
+                                                price {
+                                                    amount
+                                                    currencyCode
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            cost {
+                                totalAmount {
+                                    amount
+                                    currencyCode
+                                }
+                                subtotalAmount {
+                                    amount
+                                    currencyCode
+                                }
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    cartId: cartId
+                }
+            };
+
+            const response = await shopifyClient.post('/graphql.json', query);
+            return response.data.data.cart;
+        } catch (error) {
+            console.error('Error fetching cart:', error);
+            throw error;
+        }
+    },
+
+    // LEGACY: Keep for backward compatibility, but redirect to createCart
+    createCheckout: async (cart) => {
+        console.warn('createCheckout is deprecated. Use createCart instead.');
+        const result = await shopifyService.createCart(cart);
+        return result.checkoutUrl; // Return just the URL for backward compatibility
     }
 }
 

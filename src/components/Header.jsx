@@ -49,6 +49,9 @@ const Header = () => {
             <Link to="/mezcales">Mezcales</Link>
           </StyledElement>
           <StyledElement>
+            <Link to="/beers">Cervezas</Link>
+          </StyledElement>
+          <StyledElement>
             <Link to="/recetas">Recetas</Link>
           </StyledElement>
           <StyledElement>

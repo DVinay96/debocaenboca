@@ -199,7 +199,6 @@ const About = () => {
 
       </ValuesSection>
 
-      {/* Reviews Section */}
       <ReviewsSection ref={reviewsRef} className={reviewsVisible ? 'visible' : ''}>
         <SectionTitleWrapper>
           <SectionIcon><FaGlassWhiskey /></SectionIcon>

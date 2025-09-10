@@ -3,7 +3,7 @@ import axios from "axios";
 const shopifyConfig = {
     shopName: process.env.REACT_APP_SHOPIFY_STORE_NAME,
     storefrontToken: process.env.REACT_APP_SHOPIFY_STOREFRONT_TOKEN,
-    apiVersion: '2024-07' // Updated to a newer version that supports Cart API
+    apiVersion: '2024-07' 
 }
 
 if (!shopifyConfig.shopName || !shopifyConfig.storefrontToken) {

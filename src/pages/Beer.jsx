@@ -1,14 +1,12 @@
 import React, { useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
-import espadinimg from "../assets/images/espadin.jpg";
-import mexicanoimg from "../assets/images/mexicano.jpg";
-import ensambleimg from "../assets/images/ensamble.jpg";
-import plata from "../assets/images/85point.png";
-import oro from "../assets/images/92point.png";
+import porterimg from "../assets/images/porter.png"; 
+import lagerimg from "../assets/images/lager.png"; 
+import medalla from "../assets/images/medallacerv.png";
 import { Link } from "react-router-dom";
-import bg from "../assets/images/mezcales.png";
+import bg from "../assets/images/beerbg.jpg"; 
 
-import banner1 from "../assets/images/banner1.jpg";
+import banner1 from "../assets/images/beerbanner.png";
 import banner2 from "../assets/images/banner2.jpg"; 
 
 const useIntersectionObserver = (options = {}) => {
@@ -42,54 +40,40 @@ const useIntersectionObserver = (options = {}) => {
   return [ref, isVisible];
 };
 
-const mezcales = [
+const cervezas = [
   {
-    id: 3,
-    name: "ENSAMBLE",
-    clase: "Joven",
-    cultivo: "Siembra/Silvestre/Rhodacantha",
-    agave: "Agave Angustifolia",
-    crecimiento: "8-10 años",
-    destilacion: "Doble destilación en ollas de cobre",
-    horno: "Cónico de piedra",
-    molienda: "Tahoma de piedra jalada por un caballo",
-    image: ensambleimg,
-    price: 1399,
-    info: "Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
-    stamp: oro,
+    id: 1,
+    name: "PORTER ESPADÍN",
+    tipo: "Porter",
+    abv: "6.5%",
+    ibu: "28",
+    mezcal: "Mezcal Espadín",
+    maltas: "Chocolate, Crystal, Pale Ale",
+    lupulo: "East Kent Goldings",
+    fermentacion: "Fermentación alta 18-22°C",
+    maduracion: "30 días en tanque",
+    image: porterimg,
+    price: 89,
+    info: "Cerveza porter robusta con notas de chocolate y café, enriquecida con nuestro mezcal espadín que aporta un toque ahumado único. Cuerpo medio-alto con un final suave y complejo.",
+    stamp: medalla,
     award: "Medalla de Oro: 92 puntos",
   },
   {
-    id: 1,
-    name: "ESPADÍN",
-    clase: "Joven",
-    cultivo: "Siembra",
-    agave: "Agave Angustifolia",
-    crecimiento: "7 años",
-    destilacion: "Doble destilación en ollas de cobre",
-    horno: "Cónico de piedra",
-    molienda: "Tahoma de piedra jalada por un caballo",
-    image: espadinimg,
-    price: 1199,
-    info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
-    stamp: plata,
-    award: "Medalla de Plata: 85 puntos",
-  },
-  {
     id: 2,
-    name: "MEXICANO",
-    clase: "Joven",
-    cultivo: "Silvestre",
-    agave: "Agave Rhodacantha",
-    crecimiento: "8-10 años",
-    destilacion: "Doble destilación en ollas de cobre",
-    horno: "Cónico de piedra",
-    molienda: "Tahoma de piedra jalada por un caballo",
-    image: mexicanoimg,
-    price: 1299,
-    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada",
-    stamp: plata,
-    award: "Medalla de Plata: 85 puntos",
+    name: "LAGER MEZCALERA",
+    tipo: "Lager",
+    abv: "4.8%",
+    ibu: "18",
+    mezcal: "Mezcal Espadín",
+    maltas: "Pilsner, Vienna",
+    lupulo: "Hallertau Mittelfrüh",
+    fermentacion: "Fermentación baja 8-12°C",
+    maduracion: "45 días en cámara fría",
+    image: lagerimg,
+    price: 79,
+    info: "Lager cristalina y refrescante con un toque sutil de mezcal que realza los sabores tradicionales de la malta. Perfecta para acompañar comida mexicana.",
+    stamp: medalla,
+    award: "Medalla de Plata: 88 puntos",
   },
 ];
 
@@ -97,29 +81,29 @@ const banners = [
   {
     id: 1,
     image: banner1,
-    title: "Tradición Oaxaqueña",
-    text: "Nuestros mezcales son elaborados con métodos tradicionales que han pasado de generación en generación.",
+    title: "Fusión Innovadora",
+    text: "Combinamos la tradición cervecera con el espíritu del mezcal oaxaqueño para crear sabores únicos.",
   },
   {
     id: 2,
     image: banner2,
-    title: "Agaves Seleccionados",
-    text: "Utilizamos únicamente agaves cultivados de manera sostenible, respetando los ciclos naturales de la planta.",
+    title: "Proceso Artesanal",
+    text: "Cada cerveza es elaborada en pequeños lotes, cuidando cada detalle del proceso de fermentación.",
   },
 ];
 
-const Products = () => {
+const Beers = () => {
   return (
     <PageContainer>
       <Header>
-        <PageTitle>Nuestros Mezcales</PageTitle>
+        <PageTitle>Nuestras Cervezas</PageTitle>
       </Header>
       <ProductsContainer>
-        {mezcales.map((product, index) => (
+        {cervezas.map((product, index) => (
           <React.Fragment key={product.id}>
             <ProductSection product={product} isReversed={index % 2 !== 0} />
 
-            {index < mezcales.length - 1 && (
+            {index < cervezas.length - 1 && (
               <BannerSection banner={banners[index % banners.length]} />
             )}
           </React.Fragment>
@@ -151,39 +135,42 @@ const ProductSection = ({ product, isReversed }) => {
           <ProductPrice>
             ${product.price} <span>MXN</span>
           </ProductPrice>
-       
         </ProductHeader>
 
         <SpecsSection>
           <SpecsTitle>Especificaciones</SpecsTitle>
           <SpecsGrid>
             <SpecItem>
-              <SpecLabel>Clase</SpecLabel>
-              <SpecValue>{product.clase}</SpecValue>
+              <SpecLabel>Tipo</SpecLabel>
+              <SpecValue>{product.tipo}</SpecValue>
             </SpecItem>
             <SpecItem>
-              <SpecLabel>Agave</SpecLabel>
-              <SpecValue>{product.agave}</SpecValue>
+              <SpecLabel>ABV</SpecLabel>
+              <SpecValue>{product.abv}</SpecValue>
             </SpecItem>
             <SpecItem>
-              <SpecLabel>Crecimiento</SpecLabel>
-              <SpecValue>{product.crecimiento}</SpecValue>
+              <SpecLabel>IBU</SpecLabel>
+              <SpecValue>{product.ibu}</SpecValue>
             </SpecItem>
             <SpecItem>
-              <SpecLabel>Cultivo</SpecLabel>
-              <SpecValue>{product.cultivo}</SpecValue>
+              <SpecLabel>Mezcal</SpecLabel>
+              <SpecValue>{product.mezcal}</SpecValue>
             </SpecItem>
             <SpecItem>
-              <SpecLabel>Destilación</SpecLabel>
-              <SpecValue>{product.destilacion}</SpecValue>
+              <SpecLabel>Maltas</SpecLabel>
+              <SpecValue>{product.maltas}</SpecValue>
             </SpecItem>
             <SpecItem>
-              <SpecLabel>Horno</SpecLabel>
-              <SpecValue>{product.horno}</SpecValue>
+              <SpecLabel>Lúpulo</SpecLabel>
+              <SpecValue>{product.lupulo}</SpecValue>
             </SpecItem>
             <SpecItem>
-              <SpecLabel>Molienda</SpecLabel>
-              <SpecValue>{product.molienda}</SpecValue>
+              <SpecLabel>Fermentación</SpecLabel>
+              <SpecValue>{product.fermentacion}</SpecValue>
+            </SpecItem>
+            <SpecItem>
+              <SpecLabel>Maduración</SpecLabel>
+              <SpecValue>{product.maduracion}</SpecValue>
             </SpecItem>
           </SpecsGrid>
         </SpecsSection>
@@ -396,13 +383,6 @@ const ProductPrice = styled.div`
   }
 `;
 
-const ComparePrice = styled.span`
-  text-decoration: line-through;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-`;
-
 const SpecsSection = styled.div`
   margin-bottom: 2rem;
 `;
@@ -601,4 +581,4 @@ const Header = styled.div`
   }
 `;
 
-export default Products;
+export default Beers;

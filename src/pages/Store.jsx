@@ -69,6 +69,7 @@ const Store = () => {
     { id: "espadín", name: "Espadín" },
     { id: "ensamble", name: "Ensamble" },
     { id: "Mexicano", name: "Mexicano" },
+    { id: "cerveza", name: "Cervezas" },
   ];
 
   const filteredProducts = products.filter((product) => {

@@ -14,6 +14,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { ThemeProvider } from "styled-components";
 import { lightTheme } from "./styles/globalStyles";
 import { CartProvider } from "./contexts/CartContext"; 
+import Beers from "./pages/Beer";
 
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
             <Route path="/" element={<Inicio />} />
             <Route path="/nosotros" element={<About />} />
             <Route path="/mezcales" element={<Products />} />
+            <Route path="/beers" element={<Beers />} />
             <Route path="/recetas" element={<Recipes />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/facturacion" element={<Facturacion />} />

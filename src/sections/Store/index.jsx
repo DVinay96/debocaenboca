@@ -1,55 +1,56 @@
-import React, { useState, useEffect } from "react";
-import shopifyService from "../../services/shopify";
+
 import styled from "styled-components";
 import Subtitle from "../../components/Subtitle";
 import TopTitle from "../../components/TopTitle";
 import Card from "../../components/Card";
 
 const Store = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const productsData = await shopifyService.getProducts();
-        setProducts(
-          productsData.map((product) => {
-            let newDescription = "";
 
-            switch (true) {
-              case product.title.includes("Espadín Joven"):
-                newDescription = "Un clásico para paladares tradicionales";
-                break;
-              case product.title.includes("Ensamble Espadín/Mexicano"):
-                newDescription = "Elixir artesanal con sabores únicos";
-                break;
-              case product.title.includes("Mexicano Joven"):
-                newDescription = "Destilado a ser referente de los conocedores";
-                break;
-              default:
-                newDescription = product.description;
-            }
-
-            return {
-              ...product,
-              newDescription,
-            };
-          })
-        );
-        setError(null);
-      } catch (err) {
-        setError("Failed to fetch products");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  const products = [
+  {
+    id: 3,
+    name: "ENSAMBLE",
+    clase: "Joven",
+    cultivo: "Siembra/Silvestre/Rhodacantha",
+    agave: "Agave Angustifolia",
+    crecimiento: "8-10 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    price: 1399,
+    info: "Cristalino, suave percepción de hierbas de campo, aroma cítrico, predominante el té de limón y naranja, textura suave, sabores equilibrados herbáceos y frutales, cítricos, con notas de dulzura al final",
+    award: "Medalla de Oro: 92 puntos",
+  },
+  {
+    id: 1,
+    name: "ESPADÍN",
+    clase: "Joven",
+    cultivo: "Siembra",
+    agave: "Agave Angustifolia",
+    crecimiento: "7 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    price: 1199,
+    info: "El mezcal espadín tiene una textura dulce y herbácea, bien equilibrada con notas de manzana dulce, frutas maduras y una suave capa ahumada para finalizar.",
+    award: "Medalla de Plata: 85 puntos",
+  },
+  {
+    id: 2,
+    name: "MEXICANO",
+    clase: "Joven",
+    cultivo: "Silvestre",
+    agave: "Agave Rhodacantha",
+    crecimiento: "8-10 años",
+    destilacion: "Doble destilación en ollas de cobre",
+    horno: "Cónico de piedra",
+    molienda: "Tahoma de piedra jalada por un caballo",
+    price: 1299,
+    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas herbales y frutales dejando un bouquet a fruta fermentada",
+    award: "Medalla de Plata: 85 puntos",
+  },
+];
 
   return (
     <Section>
@@ -59,8 +60,7 @@ const Store = () => {
           <Subtitle size="XL">El mezcal original</Subtitle>
         </Texts>
         <ProductContainer>
-          {loading && <p>Loading...</p>}
-          {error && <p>{error}</p>}
+    
           {products.map((product) => (
             <Card key={product.id} product={product} />
           ))}

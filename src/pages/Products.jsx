@@ -87,7 +87,7 @@ const mezcales = [
     molienda: "Tahoma de piedra jalada por un caballo",
     image: mexicanoimg,
     price: 1299,
-    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas verbales y frutales dejando un bouquet a fruta fermentada",
+    info: "Tiene aromas frutales, terrosas, dulces y sutiles el sabor al inicio presenta notas herbales y frutales dejando un bouquet a fruta fermentada",
     stamp: plata,
     award: "Medalla de Plata: 85 puntos",
   },

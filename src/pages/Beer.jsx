@@ -45,35 +45,24 @@ const cervezas = [
     id: 1,
     name: "PORTER ESPADÍN",
     tipo: "Porter",
-    abv: "6.5%",
+    abv: "9%",
     ibu: "28",
     mezcal: "Mezcal Espadín",
-    maltas: "Chocolate, Crystal, Pale Ale",
-    lupulo: "East Kent Goldings",
-    fermentacion: "Fermentación alta 18-22°C",
-    maduracion: "30 días en tanque",
+    stamp: medalla,
     image: porterimg,
     price: 89,
-    info: "Cerveza porter robusta con notas de chocolate y café, enriquecida con nuestro mezcal espadín que aporta un toque ahumado único. Cuerpo medio-alto con un final suave y complejo.",
-    stamp: medalla,
-    award: "Medalla de Oro: 92 puntos",
+    info: "Baltic porter como base, combinando el proceso con mezcal espadín para obtener sus notas. Resaltando los sabores tostados de la malta, chocolate amargo, y frutos que combinan con las notas ahumadas, cítricas y dulces del mezcal espadín. ",
   },
   {
     id: 2,
-    name: "LAGER MEZCALERA",
+    name: "HOPPY LAGUER CON MEZCAL",
     tipo: "Lager",
-    abv: "4.8%",
-    ibu: "18",
+    abv: "4.5%",
+    ibu: "20",
     mezcal: "Mezcal Espadín",
-    maltas: "Pilsner, Vienna",
-    lupulo: "Hallertau Mittelfrüh",
-    fermentacion: "Fermentación baja 8-12°C",
-    maduracion: "45 días en cámara fría",
     image: lagerimg,
     price: 79,
-    info: "Lager cristalina y refrescante con un toque sutil de mezcal que realza los sabores tradicionales de la malta. Perfecta para acompañar comida mexicana.",
-    stamp: medalla,
-    award: "Medalla de Plata: 88 puntos",
+    info: "Se usó como base la IPA, mezclando sus sabores suaves orientados al lúpulo y malta que combinados con los toques de mezcal espadín provocan una sensación única con notas cítricas y ahumadas",
   },
 ];
 
@@ -124,7 +113,8 @@ const ProductSection = ({ product, isReversed }) => {
     >
       <ProductImageColumn isReversed={isReversed}>
         <ProductImageWrapper>
-          <MedalImage src={product.stamp} alt="Award" />
+          {product.stamp && 
+          <MedalImage src={product.stamp} alt="Award" />}
           <ProductImage src={product.image} alt={product.name} />
         </ProductImageWrapper>
       </ProductImageColumn>
@@ -155,22 +145,6 @@ const ProductSection = ({ product, isReversed }) => {
             <SpecItem>
               <SpecLabel>Mezcal</SpecLabel>
               <SpecValue>{product.mezcal}</SpecValue>
-            </SpecItem>
-            <SpecItem>
-              <SpecLabel>Maltas</SpecLabel>
-              <SpecValue>{product.maltas}</SpecValue>
-            </SpecItem>
-            <SpecItem>
-              <SpecLabel>Lúpulo</SpecLabel>
-              <SpecValue>{product.lupulo}</SpecValue>
-            </SpecItem>
-            <SpecItem>
-              <SpecLabel>Fermentación</SpecLabel>
-              <SpecValue>{product.fermentacion}</SpecValue>
-            </SpecItem>
-            <SpecItem>
-              <SpecLabel>Maduración</SpecLabel>
-              <SpecValue>{product.maduracion}</SpecValue>
             </SpecItem>
           </SpecsGrid>
         </SpecsSection>
@@ -311,7 +285,7 @@ const ProductImageWrapper = styled.div`
 
 const ProductImage = styled.img`
   width: 100%;
-  height: auto;
+  max-height: auto;
   display: block;
   transition: transform 0.5s ease;
 

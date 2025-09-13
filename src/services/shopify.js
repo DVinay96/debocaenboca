@@ -40,36 +40,42 @@ const retry = async (operation, maxRetries = 3, delay = 500) => {
 const shopifyService = {
     getProducts: async () => {
         try {
+            const collectionId = "gid://shopify/Collection/295870726237";
+            
             const query = {
                 query: `
                     {
-                        products(first: 20) {
-                            edges {
-                                node {
-                                    id
-                                    title
-                                    description
-                                    variants(first: 1) {
-                                        edges {
-                                            node {
-                                                id  # This is important for cart
-                                                price {
-                                                    amount
-                                                    currencyCode
+                        collection(id: "${collectionId}") {
+                            id
+                            title
+                            products(first: 20) {
+                                edges {
+                                    node {
+                                        id
+                                        title
+                                        description
+                                        variants(first: 1) {
+                                            edges {
+                                                node {
+                                                    id  # This is important for cart
+                                                    price {
+                                                        amount
+                                                        currencyCode
+                                                    }
+                                                    compareAtPrice {
+                                                        amount
+                                                        currencyCode
+                                                    }
+                                                    availableForSale
                                                 }
-                                                compareAtPrice {
-                                                    amount
-                                                    currencyCode
-                                                }
-                                                availableForSale
                                             }
                                         }
-                                    }
-                                    images(first: 1) {
-                                        edges {
-                                            node {
-                                                url
-                                                altText
+                                        images(first: 1) {
+                                            edges {
+                                                node {
+                                                    url
+                                                    altText
+                                                }
                                             }
                                         }
                                     }
@@ -81,7 +87,15 @@ const shopifyService = {
             };
     
             const response = await shopifyClient.post('/graphql.json', query);
-            return response.data.data.products.edges.map(({ node }) => ({
+            
+            if (!response.data || !response.data.data || !response.data.data.collection) {
+                throw new Error('Collection "De Boca en Boca" not found. Please check the collection ID.');
+            }
+            
+            const collection = response.data.data.collection;
+            console.log(`Found collection: "${collection.title}" with ${collection.products.edges.length} products`);
+            
+            return collection.products.edges.map(({ node }) => ({
                 id: node.id,
                 title: node.title,
                 description: node.description,
@@ -92,7 +106,7 @@ const shopifyService = {
                 availableForSale: node.variants.edges[0]?.node.availableForSale
             }));
         } catch (error) {
-            console.log('Error fetching products:', error);
+            console.error('Error fetching products from De Boca en Boca collection:', error);
             throw error;
         }
     },
@@ -152,7 +166,6 @@ const shopifyService = {
         }
     },
 
-    // NEW: Create a cart (replaces createCheckout)
     createCart: async (cart) => {
         return retry(async () => {
             try {
@@ -241,7 +254,6 @@ const shopifyService = {
         }, 5, 800);
     },
 
-    // NEW: Add items to existing cart
     addToCart: async (cartId, items) => {
         return retry(async () => {
             try {
@@ -310,7 +322,6 @@ const shopifyService = {
         }, 5, 800);
     },
 
-    // NEW: Update cart line quantities
     updateCartLines: async (cartId, lines) => {
         return retry(async () => {
             try {
@@ -374,7 +385,6 @@ const shopifyService = {
         }, 5, 800);
     },
 
-    // NEW: Remove items from cart
     removeFromCart: async (cartId, lineIds) => {
         return retry(async () => {
             try {
@@ -438,7 +448,6 @@ const shopifyService = {
         }, 5, 800);
     },
 
-    // NEW: Get cart details
     getCart: async (cartId) => {
         try {
             const query = {
@@ -494,11 +503,10 @@ const shopifyService = {
         }
     },
 
-    // LEGACY: Keep for backward compatibility, but redirect to createCart
     createCheckout: async (cart) => {
         console.warn('createCheckout is deprecated. Use createCart instead.');
         const result = await shopifyService.createCart(cart);
-        return result.checkoutUrl; // Return just the URL for backward compatibility
+        return result.checkoutUrl; 
     }
 }
 

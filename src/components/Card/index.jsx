@@ -7,23 +7,17 @@ import { Link } from "react-router-dom";
 import Button from "../Button";
 
 const Card = ({ product }) => {
-  const deleteAfterFirsColon = (title) => {
-    const index = title.indexOf(",");
-    if (index !== -1) {
-      return title.substring(0, index);
-    }
-    return title;
-  };
+
 
   return (
     <CardContainer>
-      <Subtitle size="XS">{deleteAfterFirsColon(product.title)}</Subtitle>
-      <p>{product.newDescription}</p>
+      <Subtitle size="XS">{(product.name)}</Subtitle>
+      <p>{product.info}</p>
       <ImagenContainer>
         <Image src={botellaDemo} alt={product.title} />
       </ImagenContainer>
       <p>Precio</p>
-      <Price>${product.price.amount} </Price>
+      <Price>${product.price} </Price>
       { product.compareAtPrice?.amount ? 
       (<ComparePrice>
           ${product?.compareAtPrice?.amount}

@@ -96,7 +96,7 @@ const Homepage = () => {
               Explorar
             </Button>
           </Link>
-          <ButtomTittleText>Porque los secretos siempre van DE BOCA EN BOCA...todos quieren saberlo pero no todos pueden tenerlo...</ButtomTittleText>
+          <ButtomTittleText>Porque los secretos siempre van DE BOCA EN BOCA...todos quieren saberlos pero no todos pueden tenerlos...</ButtomTittleText>
         </UpperContain>
       </UpperContent>
 

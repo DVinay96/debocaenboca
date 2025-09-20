@@ -5,6 +5,7 @@ import shopifyService from '../services/shopify';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaTrash, FaArrowLeft, FaShoppingBag, FaSpinner } from 'react-icons/fa';
 import { useCart } from "../contexts/CartContext";
+import mercadopagoImage from '../assets/images/mercado.jpeg'
 
 
 const Cart = () => {
@@ -43,10 +44,7 @@ const Cart = () => {
     0
   );
   
-  // Estimated values for display purposes
-  const shipping = subtotal > 0 ? 150 : 0;
-  const tax = subtotal * 0.16; // 16% IVA
-  const total = subtotal + shipping + tax;
+  const total = subtotal;
 
   return (
     <CartPageContainer>
@@ -101,6 +99,7 @@ const Cart = () => {
               <FaArrowLeft size={14} />
               <span>Continuar comprando</span>
             </ContinueShoppingLink>
+            <MercadoPagoImage src={mercadopagoImage}/>
           </CartItemsSection>
           
           <OrderSummarySection>
@@ -115,7 +114,6 @@ const Cart = () => {
               
               <SummaryRow>
                 <SummaryLabel>Impuestos (16% IVA)</SummaryLabel>
-                <SummaryValue>${tax.toFixed(2)}</SummaryValue>
               </SummaryRow>
               
               <SummaryDivider />
@@ -552,6 +550,11 @@ const EmptyCartMessage = styled.p`
   margin-bottom: 2rem;
   max-width: 500px;
 `;
+
+const MercadoPagoImage = styled.img`
+max-height: 70%;
+max-width: 50%;
+`
 
 
 export default Cart;

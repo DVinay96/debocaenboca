@@ -1,9 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
-// Create the CartContext
 const CartContext = createContext();
 
-// CartProvider component to provide the cart state and functions
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
@@ -48,7 +46,6 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the CartContext
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {

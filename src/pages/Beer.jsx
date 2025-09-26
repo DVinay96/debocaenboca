@@ -50,7 +50,7 @@ const cervezas = [
     mezcal: "Mezcal Espadín",
     stamp: medalla,
     image: porterimg,
-    price: 89,
+    price: 119,
     info: "Baltic porter como base, combinando el proceso con mezcal espadín para obtener sus notas. Resaltando los sabores tostados de la malta, chocolate amargo, y frutos que combinan con las notas ahumadas, cítricas y dulces del mezcal espadín. ",
   },
   {
@@ -61,7 +61,7 @@ const cervezas = [
     ibu: "20",
     mezcal: "Mezcal Espadín",
     image: lagerimg,
-    price: 79,
+    price: 100,
     info: "Se usó como base la IPA, mezclando sus sabores suaves orientados al lúpulo y malta que combinados con los toques de mezcal espadín provocan una sensación única con notas cítricas y ahumadas",
   },
 ];

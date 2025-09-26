@@ -3,11 +3,20 @@ import styled from "styled-components";
 import Subtitle from "../Subtitle";
 import botellaDemo from "../../assets/images/botella demo.png";
 import bottle from "../../assets/images/bg.png";
+import badge85 from "../../assets/images/85point.png";
+import badge92 from "../../assets/images/92point.png";
 import { Link } from "react-router-dom";
 import Button from "../Button";
 
 const Card = ({ product }) => {
 
+  const getBadgeImage = (award) => {
+    if (award?.includes("92 puntos")) return badge92;
+    if (award?.includes("85 puntos")) return badge85;
+    return null;
+  };
+
+  const badgeImage = getBadgeImage(product.award);
 
   return (
     <CardContainer>
@@ -15,6 +24,9 @@ const Card = ({ product }) => {
       <p>{product.info}</p>
       <ImagenContainer>
         <Image src={botellaDemo} alt={product.title} />
+        {badgeImage && (
+          <Badge src={badgeImage} alt="Award badge" />
+        )}
       </ImagenContainer>
       <p>Precio</p>
       <Price>${product.price} </Price>
@@ -61,6 +73,7 @@ const ImagenContainer = styled.div`
   background-position: center calc(50% + 60px);
   background-repeat: no-repeat;
   width: 100%;
+  position: relative;
 `;
 
 const Price = styled.p`
@@ -73,4 +86,13 @@ const ComparePrice = styled.span`
   font-size: 1.5rem;
   font-weight: 700;
   color: #333;
+`;
+
+const Badge = styled.img`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  height: 60px;
+  z-index: 10;
 `;

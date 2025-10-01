@@ -55,7 +55,7 @@ const cervezas = [
   },
   {
     id: 2,
-    name: "HOPPY LAGUER CON MEZCAL",
+    name: "HOPPY LAGER CON MEZCAL",
     tipo: "Lager",
     abv: "4.5%",
     ibu: "20",

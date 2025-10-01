@@ -20,7 +20,7 @@ const SideBar = ({ isOpen, setIsOpen, color = "dark" }) => {
             info@mezcaldebocaenboca.com
           </a>
           <p>
-            Prolongación 15 SUR A-3 Club de Gold La Huerta San Pedro Cholula,
+            Prolongación 15 SUR A-3 Club de Golf La Huerta San Pedro Cholula,
             Puebla 72760
           </p>
           <Footer>

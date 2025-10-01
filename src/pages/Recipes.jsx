@@ -60,7 +60,7 @@ const Recipes = () => {
       category: 'classic',
       difficulty: 'Fácil',
       prepTime: '5 minutos',
-      description: 'Una variante ahumada del clásico cóctel mexicano, perfecta para cualquier ocasión. El mezcal aporta notas ahumadas que complementan el cítrico del limón.',
+      description: 'Una variante ahumada del clásico coctel mexicano, perfecta para cualquier ocasión. El mezcal aporta notas ahumadas que complementan el cítrico del limón.',
       ingredients: [
         '2 oz Mezcal De Boca en Boca Espadín',
         '1 oz jugo de limón fresco',
@@ -99,7 +99,7 @@ const Recipes = () => {
         'Vierte el mezcal y mezcla bien hasta que se disuelva la miel.',
         'Agrega hielo y revuelve durante 30 segundos para diluir y enfriar.',
         'Cuela en un vaso bajo con un cubo de hielo grande.',
-        'Exprime la cáscara de naranja sobre el cóctel para liberar los aceites esenciales.',
+        'Exprime la cáscara de naranja sobre el coctel para liberar los aceites esenciales.',
         'Usa la cáscara como guarnición y disfruta lentamente.'
       ]
     },
@@ -111,7 +111,7 @@ const Recipes = () => {
       category: 'refreshing',
       difficulty: 'Fácil',
       prepTime: '5 minutos',
-      description: 'Una versión ahumada del refrescante cóctel Paloma, que combina perfectamente los cítricos del toronja con las notas terrosas del mezcal.',
+      description: 'Una versión ahumada del refrescante coctel Paloma, que combina perfectamente los cítricos del toronja con las notas terrosas del mezcal.',
       ingredients: [
         '2 oz Mezcal De Boca en Boca Mexicano',
         '2 oz jugo de toronja fresco',
@@ -141,7 +141,7 @@ const Recipes = () => {
       <HeroHeader ref={headerRef} className={headerVisible ? 'visible' : ''}>
         <HeroOverlay />
         <HeroContent>
-          <HeroTitle>Cócteles con Mezcal</HeroTitle>
+          <HeroTitle>Cocteles con Mezcal</HeroTitle>
           <HeroSubtitle>Descubre deliciosas recetas con nuestro mezcal artesanal</HeroSubtitle>
         </HeroContent>
       </HeroHeader>
@@ -149,7 +149,7 @@ const Recipes = () => {
       <VideoSection>
         <SectionTitle>
           <SectionTitleIcon><FaGlassMartini /></SectionTitleIcon>
-          <span>Aprende a preparar nuestros cócteles</span>
+          <span>Aprende a preparar nuestros cocteles</span>
         </SectionTitle>
         
         <VideoContainer>
@@ -249,7 +249,7 @@ const Recipes = () => {
       {/* Call to Action */}
       <CTASection>
         <CTAContent>
-          <CTATitle>¿Listo para preparar tus propios cócteles?</CTATitle>
+          <CTATitle>¿Listo para preparar tus propios cocteles?</CTATitle>
           <CTAText>Consigue nuestro mezcal artesanal y comienza a crear estas deliciosas recetas.</CTAText>
           <CTAButton to="/tienda">
             <span>Comprar Ahora</span>
